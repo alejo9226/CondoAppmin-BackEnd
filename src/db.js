@@ -1,7 +1,9 @@
+const dotenv = require('dotenv')
+dotenv.config()
 const mongoose = require('mongoose')
 
-function connect () {
-  mongoose.connect('mongodb://localhost:27017/references', {
+function connect() {
+  mongoose.connect(process.env.CONNECTIONSTRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
