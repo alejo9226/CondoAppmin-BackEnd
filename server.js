@@ -1,13 +1,17 @@
-const express = require('express')
-const cors = require('cors')
-const { connect } = require('./src/db')
+const express = require("express");
+const app = express();
+const { connect } = require("./src/db");
+const adminRouter = require("./src/routes/admin");
+const residentRouter = require("./src/routes/resident");
 
-const port = 8000
+const port = 8080;
 
-const app = express()
+connect();
+app.use(express.json());
 
-connect()
+app.use("/admin", adminRouter);
+app.use("/resident", residentRouter);
 
 app.listen(port, () => {
-  console.log(`Successfully running at http://localhost:${port}`)
-})
+  console.log(`Successfully running at http://localhost:${port}`);
+});
