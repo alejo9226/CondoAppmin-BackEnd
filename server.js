@@ -5,9 +5,11 @@ const adminRouter = require("./src/routes/admin");
 const residentRouter = require("./src/routes/resident");
 const condoRouter = require("./src/routes/condo");
 const unitRouter = require("./src/routes/unit");
+const cors = require("cors");
 
 const port = 8080;
 
+app.use(cors());
 connect();
 app.use(express.json());
 
