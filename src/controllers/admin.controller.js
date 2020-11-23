@@ -16,7 +16,7 @@ module.exports = {
         { expiresIn: 60 * 60 * 24 },
       )
 
-      res.status(201).json({ token })
+      res.status(201).json({ token, message: 'Registro exitoso' })
     } catch(err) {
       res.status(400).json({ message: err.message })
     }
@@ -42,15 +42,17 @@ module.exports = {
         { expiresIn: 60 * 60 * 24 },
       );
 
-      res.status(200).json({ token });
+      res.status(200).json({ token, name: admin.name });
     } catch(err) {
       res.status(401).json({ message: err.message })
     }
   },
   async list(req, res) {
     try {
-      const admins = await Admin.find()
-      res.status(200).json({ message: 'admins found', data: admins })
+      const adminId = req.admin
+      console.log('administrador', adminId)
+      const admin = await Admin.findOne({ _id: adminId })
+      res.status(200).json({ message: 'admins found', name: admin.name })
     } catch (err) {
       res.status(400).json({ message: 'admins could not be found' })
       
