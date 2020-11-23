@@ -5,6 +5,7 @@ const adminRouter = require("./src/routes/admin");
 const residentRouter = require("./src/routes/resident");
 const condoRouter = require("./src/routes/condo");
 const unitRouter = require("./src/routes/unit");
+const ticketRouter = require("./src/routes/ticket");
 const cors = require("cors");
 
 const port = 8080;
@@ -17,6 +18,7 @@ app.use("/admin", adminRouter);
 app.use("/resident", residentRouter);
 app.use("/condo", condoRouter);
 app.use("/unit", unitRouter);
+app.use("/ticket", ticketRouter);
 
 app.listen(port, () => {
   console.log(`Successfully running at http://localhost:${port}`);
