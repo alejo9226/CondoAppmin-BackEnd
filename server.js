@@ -1,9 +1,9 @@
+const dotenv = require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const { connect } = require('./src/db')
 const adminRouter = require('./src/routes/admin')
 const morgan = require('morgan')
-const dotenv = require('dotenv').config()
 const app = express()
 
 const port = 8000
