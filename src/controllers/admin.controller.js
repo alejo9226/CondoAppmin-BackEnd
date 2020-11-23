@@ -1,7 +1,7 @@
 const Admin = require('../models/admin.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
+
 
 module.exports = {
   async create(req, res) {
@@ -42,7 +42,7 @@ module.exports = {
         { expiresIn: 60 * 60 * 24 },
       );
 
-      res.status(200).json({ token });
+      res.status(200).json({ token, message: 'Inicio de sesión exitoso' });
     } catch(err) {
       res.status(401).json({ message: err.message })
     }
