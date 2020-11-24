@@ -1,5 +1,3 @@
-const dotenv = require("dotenv");
-dotenv.config();
 const mongoose = require("mongoose");
 
 function connect() {
@@ -11,12 +9,9 @@ function connect() {
   mongoose.connection.once("open", () => {
     console.log("Connection established successfully");
   });
-
-  mongoose.connection.on("error", (err) => {
+  mongoose.connection.once("error", (err) => {
     console.log("Something went wrong", err);
   });
-
-  return mongoose.connect;
 }
 
 module.exports = { connect };
