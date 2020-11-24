@@ -1,4 +1,4 @@
-const { model, Schema } = require('mongoose')
+const { model, models, Schema } = require('mongoose')
 
 const adminSchema = new Schema({
   name: { 
@@ -19,7 +19,18 @@ const adminSchema = new Schema({
   },
   email: { 
     type: String, 
-    required: true 
+    required: true,
+    validate: {
+      async validator(email) {
+        try {
+          const admin = await models.Admin.findOne({ email })
+          return !admin;
+        } catch(err) {
+          return false;
+        }
+      },
+      message: 'Correo ya está en uso',
+    }
   },
   password: { 
     type: String, 
