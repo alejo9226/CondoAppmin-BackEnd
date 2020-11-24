@@ -50,7 +50,6 @@ module.exports = {
   async list(req, res) {
     try {
       const adminId = req.admin
-      console.log('administrador', adminId)
       const admin = await Admin.findOne({ _id: adminId })
       res.status(200).json({ message: 'admins found', name: admin.name })
     } catch (err) {

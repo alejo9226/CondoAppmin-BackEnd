@@ -23,9 +23,7 @@ const adminSchema = new Schema({
     validate: {
       async validator(email) {
         try {
-          console.log('entro')
           const admin = await models.Admin.findOne({ email })
-          console.log('admin', admin)
           return !admin;
         } catch(err) {
           return false;
