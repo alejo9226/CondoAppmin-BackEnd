@@ -1,6 +1,7 @@
 const Admin = require("../models/admin.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 
 module.exports = {
   async create(req, res) {
@@ -13,7 +14,7 @@ module.exports = {
         expiresIn: 60 * 60 * 24,
       });
 
-      res.status(201).json({ token });
+      res.status(201).json({ token, message: "Registro exitoso" });
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
@@ -37,15 +38,18 @@ module.exports = {
         expiresIn: 60 * 60 * 24,
       });
 
-      res.status(200).json({ token, message: "Inicio de sesión exitoso" });
+      res.status(200).json({ token, name: admin.name });
     } catch (err) {
       res.status(401).json({ message: err.message });
     }
   },
   async list(req, res) {
     try {
-      const admins = await Admin.find();
-      res.status(200).json({ message: "admins found", data: admins });
+      const adminId = req.admin;
+      const admin = await Admin.findOne({ _id: adminId });
+      res
+        .status(200)
+        .json({ message: "admins found", name: admin.name, id: admin._id });
     } catch (err) {
       res.status(400).json({ message: "admins could not be found" });
     }

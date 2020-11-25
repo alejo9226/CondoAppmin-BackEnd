@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 function connect() {
-  mongoose.connect("mongodb://localhost:27017/condoappmin", {
+  mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
