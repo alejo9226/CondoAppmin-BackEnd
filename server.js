@@ -10,7 +10,7 @@ const condoRouter = require("./src/routes/condo");
 const unitRouter = require("./src/routes/unit");
 const ticketRouter = require("./src/routes/ticket");
 
-const port = 8080;
+const port = 8000;
 
 app.use(cors());
 connect();
