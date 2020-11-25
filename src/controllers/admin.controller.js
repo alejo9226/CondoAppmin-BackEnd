@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 
+
 module.exports = {
   async create(req, res) {
     try {
@@ -14,9 +15,10 @@ module.exports = {
         expiresIn: 60 * 60 * 24,
       });
 
-      res.status(201).json({ token, message: "Registro exitoso" });
-    } catch (err) {
-      res.status(400).json({ message: err.message });
+      res.status(201).json({ token, message: 'Registro exitoso' })
+
+    } catch(err) {
+      res.status(400).json({ message: err.message })
     }
   },
   async signin(req, res) {
@@ -34,22 +36,32 @@ module.exports = {
         throw new Error("Usuario o contraseña invalida");
       }
 
-      const token = jwt.sign({ id: admin._id }, process.env.SECRET, {
-        expiresIn: 60 * 60 * 24,
-      });
+      const token = jwt.sign(
+        { 
+          id: admin._id 
+        }, 
+        process.env.SECRET,
+          {
+            expiresIn: 60 * 60 * 24,
+          }
+      )
 
       res.status(200).json({ token, name: admin.name });
     } catch (err) {
       res.status(401).json({ message: err.message });
+
+
     }
   },
   async list(req, res) {
     try {
+
       const adminId = req.admin;
       const admin = await Admin.findOne({ _id: adminId });
       res
         .status(200)
         .json({ message: "admins found", name: admin.name, id: admin._id });
+
     } catch (err) {
       res.status(400).json({ message: "admins could not be found" });
     }
