@@ -1,50 +1,51 @@
-const { model, models, Schema } = require('mongoose')
+const { model, models, Schema } = require("mongoose");
 
 const adminSchema = new Schema({
-  name: { 
-    type: String, 
-    required: true 
+  name: {
+    type: String,
+    required: true,
   },
-  lastName: { 
-    type: String, 
-    required: true 
+  lastName: {
+    type: String,
+    required: true,
   },
-  idNumber: { 
-    type: String, 
-    required: true 
+  idNumber: {
+    type: String,
+    required: true,
   },
-  phone: { 
-    type: String, 
-    required: true 
+  phone: {
+    type: String,
+    required: true,
   },
-  email: { 
-    type: String, 
+  email: {
+    type: String,
     required: true,
     validate: {
       async validator(email) {
         try {
-          const admin = await models.Admin.findOne({ email })
+          const admin = await models.Admin.findOne({ email });
           return !admin;
-        } catch(err) {
+        } catch (err) {
           return false;
         }
       },
-      message: 'Correo ya está en uso',
-    }
+      message: "Correo ya está en uso",
+    },
   },
-  password: { 
-    type: String, 
-    required: true 
+  password: {
+    type: String,
+    required: true,
   },
   condoIds: {
-    type: [{
-       type: Schema.Types.ObjectId, 
-       ref: 'Condo', 
-       required: true 
-      }],
+    type: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Condo",
+      },
+    ],
   },
-})
+});
 
-const Admin = model('Admin', adminSchema)
+const Admin = model("Admin", adminSchema);
 
-module.exports = Admin
+module.exports = Admin;

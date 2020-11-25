@@ -1,42 +1,46 @@
-const { model, Schema } = require('mongoose')
+const { model, Schema } = require("mongoose");
 
 const ticketSchema = new Schema({
-  ref: { 
-    type: Number, 
-    required: true },
-  isSolved: { 
-    type: Boolean, 
-    required: true 
+  ref: {
+    type: String,
+    required: true,
   },
-  subject: { 
-    type: String, 
-    required: true 
+  isSolved: {
+    type: Boolean,
+    required: true,
   },
-  date: { 
-    type: Date, 
-    required: true 
+  subject: {
+    type: String,
+    required: true,
   },
-  body: { 
-    type: String, 
-    required: true 
+  date: {
+    type: Date,
+    required: true,
   },
-  files: { 
-    type: String, 
-    required: false 
+  body: {
+    type: String,
+    required: true,
   },
-  from: { 
-    type: Schema.Types.ObjectId, 
-    ref: 'Resident', 
-    required: true 
+  files: {
+    type: String,
+    required: false,
   },
-  to: { 
-    type: Schema.Types.ObjectId, 
-    ref: 'Admin', 
-    required: true 
+  from: {
+    type: Schema.Types.ObjectId,
+    ref: "Resident",
+    required: true,
   },
+  to: {
+    type: Schema.Types.ObjectId,
+    ref: "Admin",
+    required: true,
+  },
+  read: {
+    type: Boolean,
+    required: true,
+  },
+});
 
-})
+const Ticket = model("Ticket", ticketSchema);
 
-const Ticket = model('Ticket', ticketSchema)
-
-module.exports = Ticket
+module.exports = Ticket;
