@@ -12,8 +12,20 @@ module.exports = {
   },
 
   async list(req, res) {
+    const { condoId } = req.params
+
     try {
-      const unit = await Unit.find();
+      const unit = await Unit.find({condoId: condoId});
+      res.status(200).json({ message: "Units found", data: unit });
+    } catch (err) {
+      res.status(400).json({ message: "Units NOT foud", data: err });
+    }
+  },
+  async show(req, res) {
+    const { condoId } = req.params
+
+    try {
+      const unit = await Unit.find({condoId: condoId});
       res.status(200).json({ message: "Units found", data: unit });
     } catch (err) {
       res.status(400).json({ message: "Units NOT foud", data: err });

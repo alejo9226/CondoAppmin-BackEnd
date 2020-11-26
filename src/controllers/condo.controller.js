@@ -7,7 +7,7 @@ module.exports = {
       const condo = await Condo.create(data);
       res.status(201).json({ message: "Condo created", data: condo });
     } catch (err) {
-      res.status(400).json({ message: "Something was worng!", data: err });
+      res.status(400).json({ message: "Something was wrong!", data: err });
     }
   },
   async list(req, res) {

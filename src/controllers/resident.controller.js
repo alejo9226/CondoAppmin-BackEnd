@@ -3,6 +3,7 @@ const Resident = require("../models/resident.model");
 module.exports = {
   async create(req, res) {
     const data = req.body;
+
     try {
       const resident = await Resident.create(data);
       res.status(201).json({ message: "Resident Created!", data: resident });
