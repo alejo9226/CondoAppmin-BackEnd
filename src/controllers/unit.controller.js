@@ -19,4 +19,13 @@ module.exports = {
       res.status(400).json({ message: "Units NOT foud", data: err });
     }
   },
+  async show(req, res) {
+    try {
+      const units = await Unit.find({condoId: req.params.condoid})
+      res.status(200).json({ message: "Units found", data: units });
+    } catch (err) {
+      res.status(400).json({ message: "Units couldn't be find", data: err });
+    }
+    
+  }
 };

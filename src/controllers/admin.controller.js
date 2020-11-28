@@ -55,7 +55,7 @@ module.exports = {
   async list(req, res) {
     try {
 
-      const adminId = req.admin;
+      const adminId = req.user;
       const admin = await Admin.findOne({ _id: adminId });
       res
         .status(200)
