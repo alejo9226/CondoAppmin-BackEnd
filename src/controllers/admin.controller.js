@@ -52,14 +52,28 @@ module.exports = {
 
     }
   },
-  async list(req, res) {
+  async show(req, res) {
     try {
 
       const adminId = req.user;
       const admin = await Admin.findOne({ _id: adminId });
+
       res
         .status(200)
         .json({ message: "admins found", name: admin.name, id: admin._id });
+
+    } catch (err) {
+      res.status(400).json({ message: "admins could not be found" });
+    }
+  },
+  async list(req, res) {
+    try {
+
+     
+      const admins = await Admin.find()
+      res
+        .status(200)
+        .json({ message: "admins found", data: admins });
 
     } catch (err) {
       res.status(400).json({ message: "admins could not be found" });

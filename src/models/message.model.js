@@ -9,7 +9,7 @@ const messageSchema = new Schema({
     type: Date, 
     required: true 
   },
-  isRead: { 
+  read: { 
     type: Boolean, 
     required: true 
   },
