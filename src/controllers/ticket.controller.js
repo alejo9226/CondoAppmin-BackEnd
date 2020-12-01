@@ -1,4 +1,5 @@
 const Ticket = require("../models/ticket.model");
+const { show } = require("./unit.controller");
 
 module.exports = {
   async create(req, res) {
@@ -12,8 +13,18 @@ module.exports = {
   },
   async list(req, res) {
     try {
-      const ticket = await Ticket.find();
-      res.status(200).json({ message: "Tickets found", data: ticket });
+      const tickets = await Ticket.find()
+      res.status(200).json({ message: "Tickets found", data: tickets });
+    } catch (err) {
+      res.status(400).json({ message: "Tickets NOT found", data: err });
+    }
+  },
+  async show(req, res) {
+    try {
+      const { adminid } = req.params
+      const { read } = req.query
+      const tickets = await Ticket.find({ to: adminid, read: read })
+      res.status(200).json({ message: "Tickets found", data: tickets });
     } catch (err) {
       res.status(400).json({ message: "Tickets NOT found", data: err });
     }

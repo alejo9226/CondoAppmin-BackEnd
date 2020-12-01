@@ -19,7 +19,6 @@ module.exports = {
   async list(req, res) {
     try {
       const residentId = req.user
-      /* const residents = await Resident.find(); */
       const resident = await Resident.findOne({ _id: residentId });
       res.status(200).json({ message: "Resident found", id: resident._id, name: resident.name });
     } catch (err) {

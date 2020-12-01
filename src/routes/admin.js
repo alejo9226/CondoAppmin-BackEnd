@@ -4,7 +4,8 @@ const { auth } = require("../utils/auth");
 
 router.route("/signup").post(adminController.create);
 router.route("/signin").post(adminController.signin);
-router.route("/").get(auth, adminController.list);
+router.route("/").get(auth, adminController.show);
+router.route("/list").get(adminController.list);
 
 
 module.exports = router;
