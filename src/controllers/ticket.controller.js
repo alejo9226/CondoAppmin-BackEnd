@@ -4,7 +4,6 @@ const { show } = require('./unit.controller')
 module.exports = {
   async create(req, res) {
     const data = req.body
-    console.log('mi data', data)
     try {
       const ticket = await Ticket.create(data)
       res.status(201).json({ message: 'Ticket created!', data: ticket })

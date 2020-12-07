@@ -51,7 +51,6 @@ module.exports = {
   async foundEmail(req, res) {
     try {
       const { email } = req.body
-      console.log('este es el mio', email)
       const admin = await Admin.findOne({ email: email })
       res.status(200).json({
         message: 'Email found',
@@ -66,9 +65,12 @@ module.exports = {
       const adminId = req.user
       const admin = await Admin.findOne({ _id: adminId })
 
-      res
-        .status(200)
-        .json({ message: 'admins found', name: admin.name, id: admin._id })
+      res.status(200).json({
+        message: 'admins found',
+        name: admin.name,
+        id: admin._id,
+        email: admin.email,
+      })
     } catch (err) {
       res.status(400).json({ message: 'admins could not be found' })
     }

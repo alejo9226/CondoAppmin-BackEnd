@@ -28,6 +28,7 @@ module.exports = {
         message: 'Resident found',
         id: resident._id,
         name: resident.name,
+        email: email,
       })
     } catch (err) {
       res.status(400).json({ message: 'Residents not found', data: err })
