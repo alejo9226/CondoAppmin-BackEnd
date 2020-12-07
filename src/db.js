@@ -1,17 +1,17 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 function connect() {
-  mongoose.connect(process.env.CONNECTION_STRING, {
+  mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  });
+  })
 
-  mongoose.connection.once("open", () => {
-    console.log("Connection established successfully");
-  });
-  mongoose.connection.once("error", (err) => {
-    console.log("Something went wrong", err);
-  });
+  mongoose.connection.once('open', () => {
+    console.log('Connection established successfully')
+  })
+  mongoose.connection.once('error', (err) => {
+    console.log('Something went wrong', err)
+  })
 }
 
-module.exports = { connect };
+module.exports = { connect }
