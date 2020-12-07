@@ -16,11 +16,19 @@ module.exports = {
       });
     }
   },
-  async list(req, res) {
+  async show(req, res) {
     try {
       const residentId = req.user
       const resident = await Resident.findOne({ _id: residentId });
       res.status(200).json({ message: "Resident found", id: resident._id, name: resident.name });
+    } catch (err) {
+      res.status(400).json({ message: "Residents not found", data: err });
+    }
+  },
+  async list(req, res) {
+    try {
+      const residents = await Resident.find()
+      res.status(200).json({ message: "Resident found", data: residents });
     } catch (err) {
       res.status(400).json({ message: "Residents not found", data: err });
     }
