@@ -11,18 +11,18 @@ const unitRouter = require("./src/routes/unit");
 const ticketRouter = require("./src/routes/ticket");
 const messageRouter = require("./src/routes/message");
 
-const port = 8000;
+const port = process.env.PORT || 8000;
 
-app.use(cors());
-connect();
-app.use(express.json());
-app.use(morgan("dev"));
-app.use("/admin", adminRouter);
-app.use("/resident", residentRouter);
-app.use("/condo", condoRouter);
-app.use("/unit", unitRouter);
-app.use("/ticket", ticketRouter);
-app.use("/message", messageRouter);
+app.use(cors())
+connect()
+app.use(express.json())
+app.use(morgan("dev"))
+app.use("/admin", adminRouter)
+app.use("/resident", residentRouter)
+app.use("/condo", condoRouter)
+app.use("/unit", unitRouter)
+app.use("/ticket", ticketRouter)
+app.use("/message", messageRouter)
 
 app.listen(port, () => {
   console.log(`Successfully running at http://localhost:${port}`);

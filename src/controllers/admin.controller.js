@@ -6,10 +6,12 @@ const jwt = require("jsonwebtoken");
 module.exports = {
   async create(req, res) {
     try {
-      const { password } = req.body;
-      const encPassword = await bcrypt.hash(password, 8);
-      const admin = await Admin.create({ ...req.body, password: encPassword });
-
+      const { password } = req.body
+      console.log(req.body)
+      const encPassword = await bcrypt.hash(password, 8)
+      const admin = await Admin.create({ ...req.body, password: encPassword })
+      
+      console.log(admin)
       const token = jwt.sign({ id: admin._id }, process.env.SECRET, {
         expiresIn: 60 * 60 * 24,
       });
@@ -17,6 +19,7 @@ module.exports = {
       res.status(201).json({ token, message: 'Registro exitoso' })
 
     } catch(err) {
+      console.log(err)
       res.status(400).json({ message: err.message })
     }
   },
