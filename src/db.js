@@ -7,7 +7,7 @@ function connect() {
   });
 
   mongoose.connection.once("open", () => {
-    console.log("Connection established successfully");
+    console.log("Connection established successfully")
   });
   mongoose.connection.once("error", (err) => {
     console.log("Something went wrong", err);
