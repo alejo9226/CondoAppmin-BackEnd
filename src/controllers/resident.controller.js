@@ -19,7 +19,6 @@ module.exports = {
       })
     }
   },
-
   async list(req, res) {
     try {
       const residentId = req.user

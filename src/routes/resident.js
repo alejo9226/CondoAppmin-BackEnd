@@ -7,3 +7,4 @@ router.route('/signin').post(residentController.signin)
 router.route('/').get(auth, residentController.list)
 router.route('/').get(auth, residentController.foundEmail)
 module.exports = router
+
