@@ -12,6 +12,7 @@ function connect() {
   mongoose.connection.once('error', (err) => {
     console.log('Something went wrong', err)
   })
+
 }
 
 module.exports = { connect }
