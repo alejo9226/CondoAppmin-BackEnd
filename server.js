@@ -42,6 +42,10 @@ app.post('/uploads', MultipartyMiddleware, async (req, res) => {
     url: `${result.url}`,
   })
 })
+<<<<<<< HEAD
+=======
+
+>>>>>>> f0650128c413311221379634ebd8db13e820433b
 
 app.listen(port, () => {
   console.log(`Successfully running at http://localhost:${port}`)
