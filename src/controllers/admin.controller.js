@@ -8,7 +8,6 @@ module.exports = {
       const { password } = req.body
       const encPassword = await bcrypt.hash(password, 8)
       const admin = await Admin.create({ ...req.body, password: encPassword })
-
       const token = jwt.sign({ id: admin._id }, process.env.SECRET, {
         expiresIn: 60 * 60 * 24,
       })

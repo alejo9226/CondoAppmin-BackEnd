@@ -22,8 +22,13 @@ module.exports = {
   async show(req, res) {
     try {
       const { residentid } = req.params
-      const { read } = req.query
-      const messages = await Message.find({ to: residentid, read: read })
+      
+      if (Object.keys(req.query).length > 0) {
+        const { read } = req.query
+        var messages = await Message.find({ to: residentid, read: read })
+      } else {
+        var messages = await Message.find({ to: residentid })
+      }
       res.status(200).json({ message: "Messages found", data: messages });
     } catch (err) {
       res.status(400).json({ message: "No messages found", data: err });
