@@ -48,4 +48,15 @@ module.exports = {
       res.status(400).json({ message: "Message could not be updated" });
     }
   },
+  async deleteAll (req, res) {
+    try {
+      const { residentid } = req.params
+
+      const deletedMessages = await Message.deleteMany({ to: residentid })
+      res.status(200).json({ message: 'Messages deleted', data: deletedMessages })
+
+    } catch (err) {
+      res.status(400).json({ message: 'Messages could not be deleted' })
+    }
+  }
 };

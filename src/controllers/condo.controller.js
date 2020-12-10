@@ -1,4 +1,5 @@
 const Condo = require("../models/condo.model");
+const { deleteAll } = require("./message.controller");
 
 module.exports = {
   async create(req, res) {
@@ -14,4 +15,8 @@ module.exports = {
     const condo = await Condo.find();
     res.status(200).json({ message: "Condos found", data: condo });
   },
+  async deleteAll (req, res)  {
+    const deletedCondos = await Condo.deleteMany({})
+    res.status(200).json({ message: "Condos deleted", data: deletedCondos });
+  }
 };
