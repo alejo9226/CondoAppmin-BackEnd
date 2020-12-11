@@ -6,7 +6,7 @@ module.exports = {
     const data = req.body;
     try {
       const condo = await Condo.create(data);
-      res.status(201).json({ message: "Condo created", data: condo });
+      res.status(201).json({ message: "Condo created", condo: condo });
     } catch (err) {
       res.status(400).json({ message: "Something was worng!", data: err });
     }

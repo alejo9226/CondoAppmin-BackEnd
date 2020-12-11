@@ -65,7 +65,7 @@ module.exports = {
       const admin = await Admin.findOne({ _id: adminId })
 
       res.status(200).json({
-        message: 'admins found',
+        message: 'admin found',
         name: admin.name,
         id: admin._id,
         email: admin.email,
