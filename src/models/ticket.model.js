@@ -27,6 +27,10 @@ const ticketSchema = new Schema({
     type: Boolean,
     required: true,
   },
+  ticketState: {
+    type: Boolean,
+    required: true,
+  },
 })
 
 const Ticket = model('Ticket', ticketSchema)

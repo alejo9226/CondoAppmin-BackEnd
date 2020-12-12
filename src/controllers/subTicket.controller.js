@@ -1,4 +1,4 @@
-const Ticket = require('../models/ticket.model')
+const subTicket = require('../models/subticket.model')
 const { show } = require('./unit.controller')
 
 module.exports = {

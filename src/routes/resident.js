@@ -6,5 +6,5 @@ router.route('/').post(residentController.create)
 router.route('/signin').post(residentController.signin)
 router.route('/').get(auth, residentController.list)
 router.route('/').get(auth, residentController.foundEmail)
+router.route('/getResident').get(auth, residentController.show)
 module.exports = router
-
