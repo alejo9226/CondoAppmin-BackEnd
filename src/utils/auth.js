@@ -19,6 +19,7 @@ exports.auth = (req, res, next) => {
     req.user = id
 
     next()
+
   } catch (err) {
     res.status(401).json({ message: err.message })
   }

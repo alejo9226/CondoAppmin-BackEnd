@@ -26,7 +26,7 @@ const residentSchema = new Schema({
     required: true,
   },
   unitId: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: "Unit",
   },
 });

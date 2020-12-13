@@ -27,5 +27,14 @@ module.exports = {
       res.status(400).json({ message: "Units couldn't be find", data: err });
     }
     
+  },
+  async deleteAll (req, res) {
+    try {
+      const deletedUnits = await Unit.deleteMany({})
+      res.status(200).json({ message: 'Units deleted', data: deletedUnits })
+    } catch (err) {
+      res.status(400).json({ message: 'Units could not be deleted', data: err })
+
+    }
   }
 };

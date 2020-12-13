@@ -22,11 +22,23 @@ module.exports = {
   async show(req, res) {
     try {
       const { adminid } = req.params
-      const { read } = req.query
-      const tickets = await Ticket.find({ to: adminid, read: read })
+
+      if (Object.keys(req.query).length > 0 ) {
+        
+        if (Object.keys(req.query).includes('read')) {
+          const { read } = req.query
+          var tickets = await Ticket.find({ to: adminid, read: read })
+        } else {
+          throw new Error('Resource unavailable')
+        }
+
+      } else {
+        var tickets = await Ticket.find({ to: adminid })
+      }
       res.status(200).json({ message: 'Tickets found', data: tickets })
+
     } catch (err) {
-      res.status(400).json({ message: 'Tickets NOT found', data: err })
+      res.status(400).json({ message: 'Tickets could not be found', data: err })
     }
   },
 
@@ -43,4 +55,15 @@ module.exports = {
       res.status(400).json({ message: 'Ticket could not be updated' })
     }
   },
+  async deleteAll (req, res) {
+    try {
+      const { adminid } = req.params
+
+      const deletedTickets = await Ticket.deleteMany({})
+      res.status(200).json({ message: 'Tickets deleted', data: deletedTickets })
+
+    } catch (err) {
+      res.status(400).json({ message: 'Tickets could not be deleted' })
+    }
+  }
 }
