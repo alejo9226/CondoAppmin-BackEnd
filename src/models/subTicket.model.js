@@ -1,6 +1,6 @@
 const { model, Schema } = require('mongoose')
 
-const subticketSchema = new Schema({
+const subTicketSchema = new Schema({
   date: {
     type: String,
     required: true,
@@ -14,17 +14,13 @@ const subticketSchema = new Schema({
     ref: 'Resident',
     required: true,
   },
-  to: {
+  ticketFather: {
     type: Schema.Types.ObjectId,
-    ref: 'Admin',
-    required: true,
-  },
-  read: {
-    type: Boolean,
+    ref: 'Ticket',
     required: true,
   },
 })
 
-const subTicket = model('subTicket', subticketSchema)
+const subTicket = model('subTicket', subTicketSchema)
 
 module.exports = subTicket

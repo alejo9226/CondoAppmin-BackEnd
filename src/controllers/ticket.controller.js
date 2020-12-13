@@ -44,4 +44,18 @@ module.exports = {
       res.status(400).json({ message: 'Ticket could not be updated' })
     }
   },
+
+  async updateState(req, res) {
+    try {
+      const ticket = await Ticket.findByIdAndUpdate(
+        { _id: req.body._id },
+        {
+          ticketState: false,
+        }
+      )
+      res.status(200).json({ message: 'Ticket closed', data: ticket })
+    } catch (err) {
+      res.status(400).json({ message: 'Ticket could not be closed' })
+    }
+  },
 }
