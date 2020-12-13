@@ -12,14 +12,19 @@ module.exports = {
       res.status(400).json({ message: 'Something went wrong!', data: err })
     }
   },
-  // async list(req, res) {
-  //   try {
-  //     const tickets = await Ticket.find()
-  //     res.status(200).json({ message: 'Tickets found', data: tickets })
-  //   } catch (err) {
-  //     res.status(400).json({ message: 'Tickets NOT found', data: err })
-  //   }
-  // },
+  async list(req, res) {
+    try {
+      const thisId = req.body.thisId
+      console.log('Mira esta', thisId)
+      const subTickets = await SubTicket.find({ ticketFather: thisId })
+      res.status(200).json({
+        message: 'SubTickets found',
+        data: subTickets,
+      })
+    } catch (err) {
+      res.status(400).json({ message: 'Email not found', data: err })
+    }
+  },
   // async show(req, res) {
   //   try {
   //     const { adminid } = req.params
