@@ -16,7 +16,7 @@ module.exports = {
       const unit = await Unit.find();
       res.status(200).json({ message: "Units found", data: unit });
     } catch (err) {
-      res.status(400).json({ message: "Units NOT foud", data: err });
+      res.status(400).json({ message: "Units not found", data: err });
     }
   },
   async show(req, res) {
@@ -24,8 +24,37 @@ module.exports = {
       const units = await Unit.find({condoId: req.params.condoid})
       res.status(200).json({ message: "Units found", data: units });
     } catch (err) {
-      res.status(400).json({ message: "Units couldn't be find", data: err });
+      res.status(400).json({ message: "Units couldn't be found", data: err });
     }
     
+  }, 
+  async update (req, res) {
+    try {
+      const { unitid } = req.params
+      const unit = await Unit.findByIdAndUpdate(unitid, req.body)
+      res.status(200).json({ message: "Unit updated", data: unit });
+      
+    } catch (err) {
+      res.status(400).json({ message: "Unit could not be updated", data: err.message });
+    }
+  },
+  async delete (req, res) {
+    try {
+      const { unitid } = req.params
+      const deletedUnit = await Unit.findByIdAndDelete({ _id: unitid }) 
+      res.status(200).json({ message: "Unit deleted", data: deletedUnit })
+
+    } catch (err) {
+      res.status(400).json({ message: 'Unit could not be deleted', data: err })
+    }
+  },
+  async deleteAll (req, res) {
+    try {
+      const deletedUnits = await Unit.deleteMany({}) 
+      res.status(200).json({ message: "Units removed", data: deletedUnits })
+
+    } catch (err) {
+      res.status(400).json({ message: 'Units could not be removed', data: err })
+    }
   }
 };
