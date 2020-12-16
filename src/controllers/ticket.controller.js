@@ -20,6 +20,17 @@ module.exports = {
       res.status(400).json({ message: 'Tickets NOT found', data: err })
     }
   },
+  async selected(req, res) {
+    try {
+      const ticket = await Ticket.findOne({ _id: req.body._id })
+      res.status(200).json({
+        message: 'ticket found',
+        data: ticket,
+      })
+    } catch (err) {
+      res.status(400).json({ message: 'ticket not found', data: err })
+    }
+  },
   async show(req, res) {
     try {
       const { adminid } = req.params
@@ -37,6 +48,20 @@ module.exports = {
         { _id: req.body._id },
         {
           read: true,
+        }
+      )
+      res.status(200).json({ message: 'Ticket Read', data: ticket })
+    } catch (err) {
+      res.status(400).json({ message: 'Ticket could not be updated' })
+    }
+  },
+
+  async updateReadFalse(req, res) {
+    try {
+      const ticket = await Ticket.findByIdAndUpdate(
+        { _id: req.body._id },
+        {
+          read: false,
         }
       )
       res.status(200).json({ message: 'Ticket Read', data: ticket })

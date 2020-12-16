@@ -7,5 +7,7 @@ router.route('/').get(auth, ticketController.list)
 router.route('/:adminid').get(auth, ticketController.show)
 router.route('/').put(auth, ticketController.update)
 router.route('/updateState').put(auth, ticketController.updateState)
+router.route('/selected').put(auth, ticketController.selected)
+router.route('/updateTicket').put(auth, ticketController.updateReadFalse)
 
 module.exports = router
