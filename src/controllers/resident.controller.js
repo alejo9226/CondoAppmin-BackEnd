@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken')
 module.exports = {
   async create(req, res) {
     try {
-      console.log(req.body)
       const { password } = req.body
       const encPassword = await bcrypt.hash(password, 8)
       const resident = await Resident.create({
