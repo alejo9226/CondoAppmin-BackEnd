@@ -4,7 +4,6 @@ const { show } = require('./unit.controller')
 module.exports = {
   async create(req, res) {
     const data = req.body
-    console.log('mirame la data', data)
     try {
       const subTicket = await SubTicket.create(data)
       res.status(201).json({ message: 'subTicket created!', data: subTicket })
@@ -15,7 +14,6 @@ module.exports = {
   async list(req, res) {
     try {
       const thisId = req.body.thisId
-      console.log('Mira esta', thisId)
       const subTickets = await SubTicket.find({ ticketFather: thisId })
       res.status(200).json({
         message: 'SubTickets found',
@@ -25,28 +23,4 @@ module.exports = {
       res.status(400).json({ message: 'Email not found', data: err })
     }
   },
-  // async show(req, res) {
-  //   try {
-  //     const { adminid } = req.params
-  //     const { read } = req.query
-  //     const tickets = await Ticket.find({ to: adminid, read: read })
-  //     res.status(200).json({ message: 'Tickets found', data: tickets })
-  //   } catch (err) {
-  //     res.status(400).json({ message: 'Tickets NOT found', data: err })
-  //   }
-  // },
-
-  // async update(req, res) {
-  //   try {
-  //     const ticket = await Ticket.findByIdAndUpdate(
-  //       { _id: req.body._id },
-  //       {
-  //         read: true,
-  //       }
-  //     )
-  //     res.status(200).json({ message: 'Ticket Read', data: ticket })
-  //   } catch (err) {
-  //     res.status(400).json({ message: 'Ticket could not be updated' })
-  //   }
-  // },
 }

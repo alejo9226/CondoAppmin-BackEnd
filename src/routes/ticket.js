@@ -9,5 +9,8 @@ router.route('/').put(auth, ticketController.update)
 router.route('/updateState').put(auth, ticketController.updateState)
 router.route('/selected').put(auth, ticketController.selected)
 router.route('/updateTicket').put(auth, ticketController.updateReadFalse)
+router
+  .route('/residentTickets/:residentEmail')
+  .get(auth, ticketController.showResidentTickets)
 
 module.exports = router

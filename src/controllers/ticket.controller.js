@@ -4,7 +4,6 @@ const { show } = require('./unit.controller')
 module.exports = {
   async create(req, res) {
     const data = req.body
-    console.log(data)
     try {
       const ticket = await Ticket.create(data)
       res.status(201).json({ message: 'Ticket created!', data: ticket })
@@ -36,6 +35,16 @@ module.exports = {
       const { adminid } = req.params
       const { read } = req.query
       const tickets = await Ticket.find({ to: adminid, read: read })
+      res.status(200).json({ message: 'Tickets found', data: tickets })
+    } catch (err) {
+      res.status(400).json({ message: 'Tickets NOT found', data: err })
+    }
+  },
+  async showResidentTickets(req, res) {
+    try {
+      const { residentEmail } = req.params
+      const { read } = req.query
+      const tickets = await Ticket.find({ from: residentEmail, read: read })
       res.status(200).json({ message: 'Tickets found', data: tickets })
     } catch (err) {
       res.status(400).json({ message: 'Tickets NOT found', data: err })
