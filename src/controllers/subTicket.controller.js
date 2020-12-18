@@ -1,5 +1,4 @@
 const SubTicket = require('../models/subTicket.model')
-const { show } = require('./unit.controller')
 
 module.exports = {
   async create(req, res) {
