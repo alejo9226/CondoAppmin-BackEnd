@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 module.exports = {
   async create(req, res) {
     try {
+      console.log('Residente', req.body)
       const { password } = req.body
       const encPassword = await bcrypt.hash(password, 8)
       const resident = await Resident.create({
@@ -13,6 +14,7 @@ module.exports = {
       })
       res.status(201).json({ message: 'Resident Created!', data: resident })
     } catch (err) {
+      console.log('error', err)
       res.status(400).json({
         message: 'Something was wrong! Resident not created',
         data: err,
@@ -21,17 +23,22 @@ module.exports = {
   },
   async show(req, res) {
     try {
-      const residentId = req.user
+      const { condoid } = req.params
 
-      const resident = await Resident.findOne({ _id: residentId })
-      res.status(200).json({
-        message: 'Resident found',
-        id: resident._id,
-        name: resident.name,
-        email: resident.email,
-      })
+      const residents = await Resident.find({ condoId: condoid }).populate('unitId', 'name')
+      res.status(200).json({ message: 'Residents found', data: residents })
     } catch (err) {
-      res.status(400).json({ message: 'Residents not found', data: err })
+      res.status(400).json({ message: 'Residents could not be found', data: err })
+    }
+  },
+  async showOne(req, res) {
+    try {
+      const { residentid } = req.params
+
+      const resident = await Resident.find({ _id: residentid }).populate('unitId', 'name')
+      res.status(200).json({ message: 'Resident found', data: resident })
+    } catch (err) {
+      res.status(400).json({ message: 'Resident could not be found', data: err })
     }
   },
 
@@ -81,19 +88,31 @@ module.exports = {
   async list(req, res) {
     try {
       const residents = await Resident.find()
-      res.status(200).json({ message: 'residents found', data: residents })
+      res.status(200).json({ message: 'Residents found', data: residents })
     } catch (err) {
-      res.status(400).json({ message: 'residents could not be found' })
+      res.status(400).json({ message: 'Residents could not be found' })
     }
   },
   async deleteAll (req, res) {
     try {
 
       const deletedMessages = await Resident.deleteMany({})
-      res.status(200).json({ message: 'Messages deleted', data: deletedMessages })
+      res.status(200).json({ message: 'Residents deleted', data: deletedMessages })
 
     } catch (err) {
-      res.status(400).json({ message: 'Messages could not be deleted' })
+      res.status(400).json({ message: 'Residents could not be deleted' })
+    }
+  },
+  async deleteOne (req, res) {
+    try {
+      const { residentid } = req.params
+
+      const deletedResident = await Resident.findByIdAndDelete({ _id: residentid }) 
+      res.status(200).json({ message: 'Resident deleted', data: deletedResident })
+      
+    } catch (err) {
+      console.log('error', err)
+      res.status(400).json({ message: 'Resident could not be deleted', data: err })
     }
   }
 }

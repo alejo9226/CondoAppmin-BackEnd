@@ -22,17 +22,27 @@ const condoSchema = new Schema({
       },
     ],
   },
+  residentIds: {
+    type: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Resident",
+      },
+    ],
+  },
 }, {
   timestamps: true,
 })
 
 condoSchema.post('findOneAndDelete', async function(doc) {
-  
+  const condoid = JSON.stringify(doc._id)
+
   const admin = await models.Admin.findByIdAndUpdate(doc.admin)
-  admin.condoIds.pop()
+
+  const condoToRemove = admin.condoIds.findIndex(condo => JSON.stringify(condo) === condoid)
+  admin.condoIds.splice(condoToRemove, 1)
   await admin.save({ validateBeforeSave: false })
 
-  const units = await models.Unit.deleteMany({ condoId: doc._id })
 })
 
 condoSchema.pre('save', async function() {

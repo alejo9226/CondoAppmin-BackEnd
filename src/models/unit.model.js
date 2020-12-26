@@ -1,4 +1,5 @@
 const { model, Schema, models } = require("mongoose");
+const Resident = require("./resident.model");
 
 const unitSchema = new Schema({
   name: {
@@ -13,16 +14,23 @@ const unitSchema = new Schema({
   resident: {
     type: Schema.Types.ObjectId,
     ref: "Resident",
-    required: false,
   }
 }, {
   timestamps: true,
 })
 
 unitSchema.post('findOneAndDelete', async function(doc) {
+  const unitid = JSON.stringify(doc._id)
+
   const condo = await models.Condo.findByIdAndUpdate(doc.condoId)
-  condo.unitIds.pop()
+  const condoToRemove = condo.unitIds.findIndex(unit => JSON.stringify(unit) === unitid)
+  condo.unitIds.splice(condoToRemove, 1)
+
   await condo.save({ validateBeforeSave: false })
+
+  if (doc.resident) {
+    await models.Resident.findByIdAndDelete({ _id: doc.resident }) 
+  }
 })
 
 unitSchema.pre('save', async function() {
