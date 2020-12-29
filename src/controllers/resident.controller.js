@@ -20,6 +20,22 @@ module.exports = {
         data: err,
       })
     }
+  },  
+  async authenticate (req, res) {
+    try {
+      const resId = req.user
+      const resident = await Resident.findOne({ _id: resId })
+
+      res.status(200).json({
+        message: 'resident found',
+        name: resident.name,
+        id: resident._id,
+        email: resident.email,
+      })
+    } catch (err) {
+      console.log(err)
+      res.status(400).json({ message: 'admins could not be found' })
+    }
   },
   async show(req, res) {
     try {
@@ -58,6 +74,7 @@ module.exports = {
   async signin(req, res) {
     try {
       const { email, password } = req.body
+      console.log(req.body)
       const resident = await Resident.findOne({ email })
 
       if (!resident) {
@@ -82,6 +99,7 @@ module.exports = {
 
       res.status(200).json({ token, name: resident.name })
     } catch (err) {
+      console.log(err)
       res.status(401).json({ message: err.message })
     }
   },
@@ -113,6 +131,16 @@ module.exports = {
     } catch (err) {
       console.log('error', err)
       res.status(400).json({ message: 'Resident could not be deleted', data: err })
+    }
+  },
+  async update (req, res) {
+    try {
+      const { residentid } = req.params
+      const updatedResident = await Resident.findByIdAndUpdate(residentid, req.body)
+      res.status(200).json({ message: "Resident updated", data: updatedResident });
+    } catch (err) {
+      console.log(err.message)
+      res.status(400).json({ message: "Resident not updated", data: err.message });
     }
   }
 }
