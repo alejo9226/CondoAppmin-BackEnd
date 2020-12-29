@@ -44,7 +44,9 @@ const adminSchema = new Schema({
       },
     ],
   },
-});
+}, {
+  timestamps: true,
+})
 
 const Admin = model("Admin", adminSchema);
 
