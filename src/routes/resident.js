@@ -8,5 +8,5 @@ router.route('/list').get(residentController.list)
 router.route('/').get(auth, residentController.show)
 router.route('/getEmail').put(auth, residentController.foundEmail)
 router.route("/").delete(auth, residentController.deleteAll)
-module.exports = router
 
+module.exports = router

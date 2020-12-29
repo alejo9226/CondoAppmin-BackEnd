@@ -14,7 +14,7 @@ module.exports = {
       res.status(201).json({ message: 'Resident Created!', data: resident })
     } catch (err) {
       res.status(400).json({
-        message: 'Something was wrong! Resident not created',
+        message: 'Something went wrong! Resident not created',
         data: err,
       })
     }
@@ -34,7 +34,21 @@ module.exports = {
       res.status(400).json({ message: 'Residents not found', data: err })
     }
   },
+  async show(req, res) {
+    try {
+      const residentId = req.user
+      const resident = await Resident.findOne({ _id: residentId })
 
+      res.status(200).json({
+        message: 'admins found',
+        name: resident.name,
+        id: resident._id,
+        email: resident.email,
+      })
+    } catch (err) {
+      res.status(400).json({ message: 'admins could not be found' })
+    }
+  },
   async foundEmail(req, res) {
     try {
       const { email } = req.body

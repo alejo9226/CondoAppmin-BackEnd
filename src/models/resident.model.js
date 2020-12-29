@@ -1,4 +1,4 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema } = require('mongoose')
 
 const residentSchema = new Schema({
   name: {
@@ -27,10 +27,11 @@ const residentSchema = new Schema({
   },
   unitId: {
     type: String,
+    required: true,
     ref: "Unit",
   },
-});
+})
 
-const Resident = model("Resident", residentSchema);
+const Resident = model('Resident', residentSchema)
 
-module.exports = Resident;
+module.exports = Resident
