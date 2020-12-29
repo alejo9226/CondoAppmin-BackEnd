@@ -1,16 +1,16 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken')
 
 exports.auth = (req, res, next) => {
   try {
-    const { authorization } = req.headers;
+    const { authorization } = req.headers
     if (!authorization) {
-      throw new Error("Su sesión expiró");
+      throw new Error('Su sesión expiró')
     }
 
-    const [_, token] = authorization.split(" ");
+    const [_, token] = authorization.split(' ')
 
     if (!token) {
-      throw new Error("Su sesión expiró");
+      throw new Error('Su sesión expiró')
     }
 
     const { id } = jwt.verify(token, process.env.SECRET);
@@ -22,4 +22,4 @@ exports.auth = (req, res, next) => {
     console.log(err)
     res.status(401).json({ message: err.message });
   }
-};
+}

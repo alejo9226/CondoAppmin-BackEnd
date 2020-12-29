@@ -1,5 +1,4 @@
 const { model, Schema, models } = require("mongoose");
-const Resident = require("./resident.model");
 
 const unitSchema = new Schema({
   name: {
