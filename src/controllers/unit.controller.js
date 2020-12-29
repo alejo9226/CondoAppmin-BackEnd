@@ -26,7 +26,6 @@ module.exports = {
     } catch (err) {
       res.status(400).json({ message: "Units couldn't be found", data: err });
     }
-    
   }, 
   async update (req, res) {
     try {
