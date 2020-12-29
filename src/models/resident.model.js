@@ -28,6 +28,7 @@ const residentSchema = new Schema({
   unitId: {
     type: String,
     required: true,
+    ref: "Unit",
   },
 })
 

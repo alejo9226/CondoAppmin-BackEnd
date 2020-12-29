@@ -19,15 +19,16 @@ module.exports = {
       })
     }
   },
-  async list(req, res) {
+  async show(req, res) {
     try {
       const residentId = req.user
+
       const resident = await Resident.findOne({ _id: residentId })
       res.status(200).json({
         message: 'Resident found',
         id: resident._id,
         name: resident.name,
-        email: email,
+        email: resident.email,
       })
     } catch (err) {
       res.status(400).json({ message: 'Residents not found', data: err })
@@ -50,8 +51,8 @@ module.exports = {
   },
   async foundEmail(req, res) {
     try {
-      const residentEmail = req.user
-      const resident = await Resident.findOne({ email: residentEmail })
+      const { email } = req.body
+      const resident = await Resident.findOne({ email: email })
       res.status(200).json({
         message: 'Email found',
         id: resident._id,
@@ -91,4 +92,22 @@ module.exports = {
       res.status(401).json({ message: err.message })
     }
   },
+  async list(req, res) {
+    try {
+      const residents = await Resident.find()
+      res.status(200).json({ message: 'residents found', data: residents })
+    } catch (err) {
+      res.status(400).json({ message: 'residents could not be found' })
+    }
+  },
+  async deleteAll (req, res) {
+    try {
+
+      const deletedMessages = await Resident.deleteMany({})
+      res.status(200).json({ message: 'Messages deleted', data: deletedMessages })
+
+    } catch (err) {
+      res.status(400).json({ message: 'Messages could not be deleted' })
+    }
+  }
 }

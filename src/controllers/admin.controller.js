@@ -21,7 +21,6 @@ module.exports = {
     try {
       const { email, password } = req.body
       const admin = await Admin.findOne({ email })
-
       if (!admin) {
         throw new Error('Usuario o contraseña invalida')
       }
@@ -65,7 +64,7 @@ module.exports = {
       const admin = await Admin.findOne({ _id: adminId })
 
       res.status(200).json({
-        message: 'admins found',
+        message: 'admin found',
         name: admin.name,
         id: admin._id,
         email: admin.email,

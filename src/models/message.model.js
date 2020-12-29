@@ -9,10 +9,6 @@ const messageSchema = new Schema({
     type: Date, 
     required: true 
   },
-  read: { 
-    type: Boolean, 
-    required: true 
-  },
   body: { 
     type: String, 
     required: true 
@@ -22,13 +18,17 @@ const messageSchema = new Schema({
     required: false 
   },
   from: { 
-    type: Schema.Types.ObjectId, 
-    ref: 'Resident', 
+    type: String, 
+    ref: 'Admin', 
     required: true 
   },
   to: { 
     type: Schema.Types.ObjectId, 
-    ref: 'Admin', 
+    ref: 'Resident', 
+    required: true 
+  },
+  read: { 
+    type: Boolean, 
     required: true 
   },
 })
