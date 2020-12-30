@@ -29,7 +29,7 @@ module.exports = {
       res.status(400).json({ message: 'ticket not found', data: err })
     }
   },
-  async show(req, res) {
+  async showAdminTicketsByCondo(req, res) {
     try {
       const { adminid, condoid } = req.params
       if (Object.keys(req.query).length > 0 ) {
@@ -47,17 +47,30 @@ module.exports = {
       res.status(200).json({ message: 'Tickets found', data: tickets })
 
     } catch (err) {
+      console.log(err)
       res.status(400).json({ message: 'Tickets could not be found', data: err })
     }
   },
   async showResidentTickets(req, res) {
     try {
-      const { residentEmail } = req.params
-      const { read } = req.query
-      const tickets = await Ticket.find({ from: residentEmail, read: read })
+      const { residentemail } = req.params
+      if (Object.keys(req.query).length > 0 ) {
+        
+        if (Object.keys(req.query).includes('read')) {
+          const { read } = req.query
+          var tickets = await Ticket.find({ from: residentemail, read: read })
+        } else {
+          throw new Error('Resource unavailable')
+        }
+
+      } else {
+        var tickets = await Ticket.find({ from: residentemail })
+      }
       res.status(200).json({ message: 'Tickets found', data: tickets })
+
     } catch (err) {
-      res.status(400).json({ message: 'Tickets NOT found', data: err })
+      console.log(err)
+      res.status(400).json({ message: 'Tickets could not be found', data: err })
     }
   },
 

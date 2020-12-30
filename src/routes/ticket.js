@@ -5,8 +5,8 @@ const { auth } = require('../utils/auth')
 router.route("/").post(auth, ticketController.create);
 
 router.route("/").get(ticketController.list);
-router.route("/:adminid/:condoid").get(auth, ticketController.show);
-router.route('/residentTickets/:residentEmail').get(auth, ticketController.showResidentTickets)
+router.route("/resident/:residentemail").get(auth, ticketController.showResidentTickets)
+router.route("/:adminid/:condoid").get(auth, ticketController.showAdminTicketsByCondo);
 
 router.route("/").put(auth, ticketController.update);
 router.route('/updateState').put(auth, ticketController.updateState)
