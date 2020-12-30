@@ -1,5 +1,4 @@
 const Ticket = require('../models/ticket.model')
-const { show } = require('./unit.controller')
 
 module.exports = {
   async create(req, res) {
@@ -32,18 +31,18 @@ module.exports = {
   },
   async show(req, res) {
     try {
-      const { adminid } = req.params
+      const { adminid, condoid } = req.params
       if (Object.keys(req.query).length > 0 ) {
         
         if (Object.keys(req.query).includes('read')) {
           const { read } = req.query
-          var tickets = await Ticket.find({ to: adminid, read: read })
+          var tickets = await Ticket.find({ to: adminid, condoId: condoid , read: read })
         } else {
           throw new Error('Resource unavailable')
         }
 
       } else {
-        var tickets = await Ticket.find({ to: adminid })
+        var tickets = await Ticket.find({ to: adminid, condoId: condoid })
       }
       res.status(200).json({ message: 'Tickets found', data: tickets })
 

@@ -9,7 +9,6 @@ router.route("/").post(unitController.create);
 router.route("/list").get(unitController.list);
 router.route("/:condoid").get(unitController.show);
 router.route("/:unitid").put(unitController.update)
-router.route("/:unitid").delete(unitController.delete);
 router.route("/").delete(unitController.deleteAll);
 
 router.route("/:unitid").put(unitController.update)

@@ -17,5 +17,3 @@ router.route("/").delete(auth, residentController.deleteAll)
 router.route("/:residentid").delete(auth, residentController.deleteOne)
 
 module.exports = router
-
-module.exports = router

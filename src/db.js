@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 function connect() {
-  mongoose.connect(process.env.MONGO_URI, {
+  mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -12,10 +12,6 @@ function connect() {
   mongoose.connection.once('error', (err) => {
     console.log('Something went wrong', err)
   })
-<<<<<<< HEAD
-=======
-
->>>>>>> f0650128c413311221379634ebd8db13e820433b
 }
 
 module.exports = { connect }

@@ -24,13 +24,15 @@ module.exports = {
   async authenticate (req, res) {
     try {
       const resId = req.user
-      const resident = await Resident.findOne({ _id: resId })
-
+      const resident = await Resident.findOne({ _id: resId }).populate('condoId', '_id name')
+      console.log(resident)
       res.status(200).json({
         message: 'resident found',
         name: resident.name,
         id: resident._id,
         email: resident.email,
+        condoId: resident.condoId._id,
+        condoName: resident.condoId.name,
       })
     } catch (err) {
       console.log(err)
@@ -44,6 +46,7 @@ module.exports = {
       const residents = await Resident.find({ condoId: condoid }).populate('unitId', 'name')
       res.status(200).json({ message: 'Residents found', data: residents })
     } catch (err) {
+      console.log(err)
       res.status(400).json({ message: 'Residents could not be found', data: err })
     }
   },
@@ -57,21 +60,6 @@ module.exports = {
       res.status(400).json({ message: 'Resident could not be found', data: err })
     }
   },
-  async show(req, res) {
-    try {
-      const residentId = req.user
-      const resident = await Resident.findOne({ _id: residentId })
-
-      res.status(200).json({
-        message: 'admins found',
-        name: resident.name,
-        id: resident._id,
-        email: resident.email,
-      })
-    } catch (err) {
-      res.status(400).json({ message: 'admins could not be found' })
-    }
-  },
   async foundEmail(req, res) {
     try {
       const { email } = req.body
@@ -81,6 +69,7 @@ module.exports = {
         id: resident._id,
       })
     } catch (err) {
+      console.log('error', err)
       res.status(400).json({ message: 'Email not found', data: err })
     }
   },
@@ -122,6 +111,7 @@ module.exports = {
       const residents = await Resident.find()
       res.status(200).json({ message: 'Residents found', data: residents })
     } catch (err) {
+      console.log('error', err)
       res.status(400).json({ message: 'Residents could not be found' })
     }
   },
@@ -132,6 +122,7 @@ module.exports = {
       res.status(200).json({ message: 'Residents deleted', data: deletedMessages })
 
     } catch (err) {
+      console.log('error', err)
       res.status(400).json({ message: 'Residents could not be deleted' })
     }
   },
