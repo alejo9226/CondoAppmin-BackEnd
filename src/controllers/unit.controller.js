@@ -45,7 +45,6 @@ module.exports = {
       res.status(200).json({ message: "Unit deleted", data: deletedUnit })
 
     } catch (err) {
-      console.log(err)
       res.status(400).json({ message: 'Unit could not be deleted', data: err })
     }
   },

@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken')
 module.exports = {
   async create(req, res) {
     try {
-      console.log('Residente', req.body)
       const { password } = req.body
       const encPassword = await bcrypt.hash(password, 8)
       const resident = await Resident.create({
@@ -14,7 +13,6 @@ module.exports = {
       })
       res.status(201).json({ message: 'Resident Created!', data: resident })
     } catch (err) {
-      console.log('error', err)
       res.status(400).json({
         message: 'Something went wrong! Resident not created',
         data: err,
@@ -25,7 +23,6 @@ module.exports = {
     try {
       const resId = req.user
       const resident = await Resident.findOne({ _id: resId }).populate('condoId', '_id name')
-      console.log(resident)
       res.status(200).json({
         message: 'resident found',
         name: resident.name,
@@ -35,7 +32,6 @@ module.exports = {
         condoName: resident.condoId.name,
       })
     } catch (err) {
-      console.log(err)
       res.status(400).json({ message: 'admins could not be found' })
     }
   },
@@ -46,7 +42,6 @@ module.exports = {
       const residents = await Resident.find({ condoId: condoid }).populate('unitId', 'name')
       res.status(200).json({ message: 'Residents found', data: residents })
     } catch (err) {
-      console.log(err)
       res.status(400).json({ message: 'Residents could not be found', data: err })
     }
   },
@@ -69,7 +64,6 @@ module.exports = {
         id: resident._id,
       })
     } catch (err) {
-      console.log('error', err)
       res.status(400).json({ message: 'Email not found', data: err })
     }
   },
@@ -77,7 +71,6 @@ module.exports = {
   async signin(req, res) {
     try {
       const { email, password } = req.body
-      console.log(req.body)
       const resident = await Resident.findOne({ email })
 
       if (!resident) {
@@ -102,7 +95,6 @@ module.exports = {
 
       res.status(200).json({ token, name: resident.name })
     } catch (err) {
-      console.log(err)
       res.status(401).json({ message: err.message })
     }
   },
@@ -111,7 +103,6 @@ module.exports = {
       const residents = await Resident.find()
       res.status(200).json({ message: 'Residents found', data: residents })
     } catch (err) {
-      console.log('error', err)
       res.status(400).json({ message: 'Residents could not be found' })
     }
   },
@@ -122,7 +113,6 @@ module.exports = {
       res.status(200).json({ message: 'Residents deleted', data: deletedMessages })
 
     } catch (err) {
-      console.log('error', err)
       res.status(400).json({ message: 'Residents could not be deleted' })
     }
   },
@@ -134,7 +124,6 @@ module.exports = {
       res.status(200).json({ message: 'Resident deleted', data: deletedResident })
       
     } catch (err) {
-      console.log('error', err)
       res.status(400).json({ message: 'Resident could not be deleted', data: err })
     }
   },
@@ -144,7 +133,6 @@ module.exports = {
       const updatedResident = await Resident.findByIdAndUpdate(residentid, req.body)
       res.status(200).json({ message: "Resident updated", data: updatedResident });
     } catch (err) {
-      console.log(err.message)
       res.status(400).json({ message: "Resident not updated", data: err.message });
     }
   }

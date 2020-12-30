@@ -53,7 +53,6 @@ residentSchema.post('findOneAndDelete', async function(doc) {
 })
 
 residentSchema.pre('save', async function() {
-  console.log('este residente', this)
   if (this._id) {
     await models.Unit.findByIdAndUpdate(this.unitId, { resident: this._id })
     

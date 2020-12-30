@@ -47,7 +47,6 @@ module.exports = {
       res.status(200).json({ message: 'Tickets found', data: tickets })
 
     } catch (err) {
-      console.log(err)
       res.status(400).json({ message: 'Tickets could not be found', data: err })
     }
   },
@@ -69,7 +68,6 @@ module.exports = {
       res.status(200).json({ message: 'Tickets found', data: tickets })
 
     } catch (err) {
-      console.log(err)
       res.status(400).json({ message: 'Tickets could not be found', data: err })
     }
   },

@@ -19,7 +19,6 @@ exports.auth = (req, res, next) => {
 
     next();
   } catch (err) {
-    console.log(err)
     res.status(401).json({ message: err.message });
   }
 }

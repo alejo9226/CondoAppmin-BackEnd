@@ -16,6 +16,5 @@ router.route("/:unitid").put(unitController.update)
 router.route("/:unitid").delete(unitController.deleteSingle);
 router.route("/all/:condoid").delete(unitController.deleteAllFromCondo);
 router.route("/").delete(unitController.deleteAll);
-/* router.route("/:condoid").delete(unitController.deleteAll); */
 
 module.exports = router;
