@@ -31,6 +31,11 @@ const ticketSchema = new Schema({
     type: Boolean,
     required: true,
   },
+  condoId: {
+    type: Schema.Types.ObjectId,
+    ref: "Condo",
+    required: true,
+  }
 })
 
 const Ticket = model('Ticket', ticketSchema)

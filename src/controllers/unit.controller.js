@@ -21,11 +21,12 @@ module.exports = {
   },
   async show(req, res) {
     try {
-      const units = await Unit.find({condoId: req.params.condoid})
+      const units = await Unit.find({condoId: req.params.condoid}).populate('resident', 'name lastName')
       res.status(200).json({ message: "Units found", data: units });
     } catch (err) {
       res.status(400).json({ message: "Units couldn't be found", data: err });
     }
+    
   }, 
   async update (req, res) {
     try {
@@ -37,7 +38,7 @@ module.exports = {
       res.status(400).json({ message: "Unit could not be updated", data: err.message });
     }
   },
-  async delete (req, res) {
+  async deleteSingle (req, res) {
     try {
       const { unitid } = req.params
       const deletedUnit = await Unit.findByIdAndDelete({ _id: unitid }) 
@@ -45,6 +46,16 @@ module.exports = {
 
     } catch (err) {
       res.status(400).json({ message: 'Unit could not be deleted', data: err })
+    }
+  },
+  async deleteAllFromCondo (req, res) {
+    try {
+      const { condoid } = req.params
+      const deletedUnits = await Unit.deleteMany({ condoId: condoid }) 
+      res.status(200).json({ message: "Units deleted", data: deletedUnits })
+
+    } catch (err) {
+      res.status(400).json({ message: 'Units could not be deleted', data: err })
     }
   },
   async deleteAll (req, res) {

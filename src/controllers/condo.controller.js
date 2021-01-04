@@ -43,5 +43,4 @@ module.exports = {
       res.status(400).json({ message: 'Condo could not be deleted', data: err })
     }
   },
-
-};
+}
