@@ -12,7 +12,7 @@ module.exports = {
         expiresIn: 60 * 60 * 24,
       })
 
-      res.status(201).json({ token, message: 'Registro exitoso' })
+      res.status(201).json({ token, message: 'Cuenta creada exitosamente' })
     } catch (err) {
       res.status(400).json({ message: err.message })
     }
@@ -43,7 +43,7 @@ module.exports = {
 
       res.status(200).json({ token, name: admin.name })
     } catch (err) {
-      res.status(401).json({ message: err.message })
+      res.status(401).json({ message: 'Usuario o contraseña invalida' })
     }
   },
   async foundEmail(req, res) {

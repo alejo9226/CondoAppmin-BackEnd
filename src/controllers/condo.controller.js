@@ -12,8 +12,12 @@ module.exports = {
     }
   },
   async show (req, res) {
-    const condo = await Condo.find({ admin: req.user });
-    res.status(200).json({ message: "Condos found", data: condo });
+    try {
+      const condo = await Condo.find({ admin: req.user });
+      res.status(200).json({ message: "Condos found", data: condo });
+    } catch (err) {
+      res.status(400).json({ message: "Condos could not be found", data: err.message });
+    }
   },
   async update (req, res) {
     try {
@@ -22,7 +26,7 @@ module.exports = {
       res.status(200).json({ message: "Condo updated", data: condo });
       
     } catch (err) {
-      res.status(400).json({ message: "Condo could not be updated", data: err.message });
+      res.status(400).json({ message: "Condo could not be updated" });
     }
   },
   async list (req, res) {
