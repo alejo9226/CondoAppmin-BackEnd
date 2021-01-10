@@ -24,25 +24,18 @@ module.exports = {
     try {
       const { condoid } = params
       const condo = await Condo.findOneAndUpdate({ _id: condoid, admin: user }, body, { new: true })
+      if (!condo) throw new Error('Condo not found')
       res.status(200).json({ message: "Condo updated", data: condo });
       
     } catch (err) {
-      console.log(err)
       res.status(400).json({ message: "Condo could not be updated" });
     }
   },
-  async list (req, res) {
-    const condos = await Condo.find();
-    res.status(200).json({ message: "Condos found", data: condos });
-  },
-  async deleteAll (req, res)  {
-    const deletedCondos = await Condo.deleteMany({})
-    res.status(200).json({ message: "Condos deleted", data: deletedCondos });
-  },
   async delete (req, res) {
+    const { user, params } = req
     try {
-      const { condoid } = req.params
-      const deletedCondo = await Condo.findByIdAndDelete({ _id: condoid }) 
+      const { condoid } = params
+      const deletedCondo = await Condo.findOneAndDelete({ _id: condoid, admin: user }) 
       res.status(200).json({ message: "Condo deleted", data: deletedCondo })
 
     } catch (err) {

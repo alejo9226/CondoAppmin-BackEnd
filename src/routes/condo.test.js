@@ -59,7 +59,7 @@ describe('Condo route', () => {
     expect(res.body.message).toMatch(/something went wrong/i)
   })
 
-  it('should update an existing condo', async () => {
+  it('should update an existing condo if admin is owner', async () => {
     const newCondo = await Condo.create({ ...condo, admin: admin._id })
     const update = { address: '6th Avenue West' }
 
@@ -71,4 +71,78 @@ describe('Condo route', () => {
     expect(res.body.message).toMatch(/condo updated/i)
     expect(res.body.data[Object.keys(update)[0]]).toMatch(update.address)
   })
+
+  it('should not update condo when admin is not the owner', async () => {
+    const anotherUser = {
+      name: 'Juan',
+      lastName: 'Perez',
+      idNumber: '737373737',
+      phone: '3502222222',
+      email: 'juanp@test.com',
+      password: '12345',
+    }
+    const encPassword = await bcrypt.hash(anotherUser.password, 8)
+    const anotherAdmin = await Admin.create({...anotherUser, password: encPassword})
+    const anotherToken = jwt.sign(
+      { id: anotherAdmin._id },
+      process.env.SECRET,
+      { expiresIn: 60 * 60 * 24 }
+    ) 
+    const newCondo = await Condo.create({ ...condo, admin: admin._id })
+    
+    const update = { address: '6th Avenue West' }
+
+    const res = await req(app).put(`/condo/${newCondo._id}`)
+      .send(update)
+      .set('Authorization', `Bearer ${anotherToken}`)
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toMatch(/condo could not be updated/i)
+  })
+
+  it('should delete condo when admin is authenticated and is the owner', async () => {
+    const newCondo = await Condo.create({ ...condo, admin: admin._id })
+    const res = await req(app).delete(`/condo/${newCondo._id}`)
+      .set('Authorization', `Bearer ${token}`)
+
+      expect(res.statusCode).toBe(200)
+      expect(res.body.message).toMatch(/condo deleted/i)
+      expect(res.body.data._id).toMatch(newCondo._id.toString())
+  })
+
+  it('should not delete condo when admin is authenticated and isn\'t the owner', async () => {
+    const anotherUser = {
+      name: 'Juan',
+      lastName: 'Perez',
+      idNumber: '737373737',
+      phone: '3502222222',
+      email: 'juanp@test.com',
+      password: '12345',
+    }
+    const encPassword = await bcrypt.hash(anotherUser.password, 8)
+    const anotherAdmin = await Admin.create({...anotherUser, password: encPassword})
+    const anotherToken = jwt.sign(
+      { id: anotherAdmin._id },
+      process.env.SECRET,
+      { expiresIn: 60 * 60 * 24 }
+    ) 
+    const newCondo = await Condo.create({ ...condo, admin: admin._id })
+    
+    const res = await req(app).delete(`/condo/${newCondo._id}`)
+      .set('Authorization', `Bearer ${anotherToken}`)
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toMatch(/condo could not be deleted/i)
+  })
+
+  it('should show admin\'s condos when authenticated', async () => {
+    await Condo.create({ ...condo, admin: admin._id })
+    const res = await req(app).get(`/condo/`)
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.statusCode).toBe(200) 
+    expect(res.body.message).toMatch(/condos found/i)
+    expect(res.body.data).toHaveLength(1)
+  })
+
 })
