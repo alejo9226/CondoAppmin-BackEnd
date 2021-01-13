@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node src/ server.js",
+    "dev": "nodemon src/server.js",
+    "test": "cross-env DB_CONNECTION_STRING=mongodb://localhost:27017/condoappmin-test PORT=8000 SECRET=skjvbdkfgbdjfkbvkdfnvjldfbnln8w934bkvkdhfb jest --detectOpenHandles",
+    "test:watch": "yarn test --watch",
+    "test:coverage": "yarn test --coverage"
   },
   "repository": "https://github.com/alejo9226/CondoAppmin-BackEnd.git",
   "author": "Alejandro Alfaro <alejo9226@gmail.com>",
@@ -21,6 +24,8 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^26.6.3",
     "nodemon": "^2.0.6"
   }
 }

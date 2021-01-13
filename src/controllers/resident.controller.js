@@ -18,35 +18,41 @@ module.exports = {
         data: err,
       })
     }
-  },
-  async show(req, res) {
+  },  
+  async authenticate (req, res) {
     try {
-      const residentId = req.user
-
-      const resident = await Resident.findOne({ _id: residentId })
+      const resId = req.user
+      const resident = await Resident.findOne({ _id: resId }).populate('condoId', '_id name')
       res.status(200).json({
-        message: 'Resident found',
-        id: resident._id,
+        message: 'resident found',
         name: resident.name,
+        id: resident._id,
         email: resident.email,
+        condoId: resident.condoId._id,
+        condoName: resident.condoId.name,
       })
     } catch (err) {
-      res.status(400).json({ message: 'Residents not found', data: err })
+      res.status(400).json({ message: 'admins could not be found' })
     }
   },
   async show(req, res) {
     try {
-      const residentId = req.user
-      const resident = await Resident.findOne({ _id: residentId })
+      const { condoid } = req.params
 
-      res.status(200).json({
-        message: 'admins found',
-        name: resident.name,
-        id: resident._id,
-        email: resident.email,
-      })
+      const residents = await Resident.find({ condoId: condoid }).populate('unitId', 'name')
+      res.status(200).json({ message: 'Residents found', data: residents })
     } catch (err) {
-      res.status(400).json({ message: 'admins could not be found' })
+      res.status(400).json({ message: 'Residents could not be found', data: err })
+    }
+  },
+  async showOne(req, res) {
+    try {
+      const { residentid } = req.params
+
+      const resident = await Resident.find({ _id: residentid }).populate('unitId', 'name')
+      res.status(200).json({ message: 'Resident found', data: resident })
+    } catch (err) {
+      res.status(400).json({ message: 'Resident could not be found', data: err })
     }
   },
   async foundEmail(req, res) {
@@ -95,19 +101,39 @@ module.exports = {
   async list(req, res) {
     try {
       const residents = await Resident.find()
-      res.status(200).json({ message: 'residents found', data: residents })
+      res.status(200).json({ message: 'Residents found', data: residents })
     } catch (err) {
-      res.status(400).json({ message: 'residents could not be found' })
+      res.status(400).json({ message: 'Residents could not be found' })
     }
   },
   async deleteAll (req, res) {
     try {
 
       const deletedMessages = await Resident.deleteMany({})
-      res.status(200).json({ message: 'Messages deleted', data: deletedMessages })
+      res.status(200).json({ message: 'Residents deleted', data: deletedMessages })
 
     } catch (err) {
-      res.status(400).json({ message: 'Messages could not be deleted' })
+      res.status(400).json({ message: 'Residents could not be deleted' })
+    }
+  },
+  async deleteOne (req, res) {
+    try {
+      const { residentid } = req.params
+
+      const deletedResident = await Resident.findByIdAndDelete({ _id: residentid }) 
+      res.status(200).json({ message: 'Resident deleted', data: deletedResident })
+      
+    } catch (err) {
+      res.status(400).json({ message: 'Resident could not be deleted', data: err })
+    }
+  },
+  async update (req, res) {
+    try {
+      const { residentid } = req.params
+      const updatedResident = await Resident.findByIdAndUpdate(residentid, req.body)
+      res.status(200).json({ message: "Resident updated", data: updatedResident });
+    } catch (err) {
+      res.status(400).json({ message: "Resident not updated", data: err.message });
     }
   }
 }

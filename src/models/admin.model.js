@@ -1,4 +1,5 @@
 const { model, models, Schema } = require("mongoose");
+const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
 const adminSchema = new Schema({
   name: {
@@ -12,6 +13,17 @@ const adminSchema = new Schema({
   idNumber: {
     type: String,
     required: true,
+    validate: {
+      async validator(idNumber) {
+        try {
+          const admin = await models.Admin.findOne({ idNumber });
+          return !admin
+        } catch (err) {
+          return false
+        }
+      },
+      message: 'Esta cédula ya esta registrada'
+    }
   },
   phone: {
     type: String,
@@ -20,6 +32,7 @@ const adminSchema = new Schema({
   email: {
     type: String,
     required: true,
+    match: [emailRegex, 'email is not valid'],
     validate: {
       async validator(email) {
         try {
