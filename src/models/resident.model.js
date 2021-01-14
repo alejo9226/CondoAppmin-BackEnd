@@ -1,4 +1,5 @@
 const { model, Schema, models } = require("mongoose");
+const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
 const residentSchema = new Schema({
   name: {
@@ -20,6 +21,18 @@ const residentSchema = new Schema({
   email: {
     type: String,
     required: true,
+    match: [emailRegex, 'email is not valid'],
+    validate: {
+      async validator(email) {
+        try {
+          const resident = await models.Resident.findOne({ email });
+          return !resident;
+        } catch (err) {
+          return false;
+        }
+      },
+      message: "Correo ya está en uso",
+    },
   },
   password: {
     type: String,

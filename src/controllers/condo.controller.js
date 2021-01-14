@@ -1,5 +1,4 @@
 const Condo = require("../models/condo.model");
-const { deleteAll } = require("./message.controller");
 
 module.exports = {
   async create(req, res) {

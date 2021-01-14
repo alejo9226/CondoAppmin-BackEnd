@@ -6,6 +6,7 @@ module.exports = {
   async create(req, res) {
     try {
       const { password } = req.body
+      console.log('body', req.body)
       const encPassword = await bcrypt.hash(password, 8)
       const resident = await Resident.create({
         ...req.body,
@@ -13,6 +14,7 @@ module.exports = {
       })
       res.status(201).json({ message: 'Resident Created!', data: resident })
     } catch (err) {
+      console.log(err)
       res.status(400).json({
         message: 'Something went wrong! Resident not created',
         data: err,

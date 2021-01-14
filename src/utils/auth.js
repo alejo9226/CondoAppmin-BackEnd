@@ -6,7 +6,7 @@ exports.auth = (req, res, next) => {
     if (!authorization) {
       throw new Error('Su sesión expiró')
     }
-
+    console.log(req.headers)
     const [_, token] = authorization.split(' ')
 
     if (!token) {
