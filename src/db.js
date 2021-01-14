@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-let connection;
+let connection
 
 async function connect() {
   if (connection) return
@@ -22,7 +22,7 @@ async function disconnect() {
   await mongoose.disconnect()
 }
 
-async function cleanup(){
+async function cleanup() {
   for (const collection in connection.collections) {
     await connection.collections[collection].deleteMany({})
   }
