@@ -1,53 +1,28 @@
 const Resident = require('../models/resident.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { transporter } = require('../utils/mailer')
+const { transporter, residentWelcome } = require('../utils/mailer')
+const Condo = require('../models/condo.model')
+require('dotenv').config()
+
 module.exports = {
   async create(req, res) {
     try {
-      const { password } = req.body
-      console.log('body', req.body)
+      const { password, condoId } = req.body
+
       const encPassword = await bcrypt.hash(password, 8)
       const resident = await Resident.create({
         ...req.body,
         password: encPassword,
       })
-      await transporter.sendMail({
-        from: '"Administración <admon.condoapp@gmail.com>"',
-        to: req.body.email,
-        subject: `Administración: Tu cuenta de CondoApp`,
-        html: `
-        <div>
-            <h3>Hola ${req.body.name}</h3>
-            <p>Una vez más te damos la bienvenida.</p>
-            
-           <p> Siempre pensando en la comodidad de nuestros residentes y
-            brindarles servicios de calidad, te queremos presentar <a>CondoApp.com</a>,
-            un espacio virtual en donde podrás reservar los espacios de recreación, estar enterado de
-            todas las noticias de nuestro conjunto, establecer una conversación con administración para solicitar reparaciones,
-            resolver dudas y solucionar requerimientos.</p>
-            
-            <p>A continuación te entregamos tu usuario y contraseña (Te recomendamos cambiarla al iniciar sesión):
-            <ul>
-              <li>usuario: ${req.body.email}</li>
-              <li>Contraseña: ${req.body.password}</li>
-            </ul>
-            </p>
-            <p></p>
-            <p></p>
-            <p></p>
-            <p>¡Juntos contruiremos una gran convivencia!</p>
-            <p></p>
-            <p></p>
-            <p>ADMINISTRACIÓN</p>
-        </div>`,
-      })
+
+      const condo = await Condo.findOne({_id: condoId})
+      
+      await transporter.sendMail(residentWelcome(condo.name, resident.name, resident.email, password))
       res.status(201).json({ message: 'Resident Created!', data: resident })
     } catch (err) {
-      console.log(err)
       res.status(400).json({
-        message: 'Something went wrong! Resident not created',
-        data: err,
+        message: err.message,
       })
     }
   },

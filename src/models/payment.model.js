@@ -3,7 +3,7 @@ const { model, Schema, models } = require('mongoose')
 const paymentSchema = new Schema({
   admin: {
     type: Schema.Types.ObjectId,
-    ref: "Resident",
+    ref: "Admin",
     required: true
   },
   resident: {
@@ -16,8 +16,17 @@ const paymentSchema = new Schema({
     ref: "Condo",
     required: true,
   },
+  unit: {
+    type: Schema.Types.ObjectId,
+    ref: "Unit",
+    required: true,
+  },
   service: {
     type: String,
+    required: true,
+  },
+  value: {
+    type: Number,
     required: true,
   },
   isPayed: {
@@ -32,5 +41,5 @@ const paymentSchema = new Schema({
   timestamps: true,
 })
 
-const payment = model('payment', paymentSchema)
-module.exports = payment
+const Payment = model('Payment', paymentSchema)
+module.exports = Payment
