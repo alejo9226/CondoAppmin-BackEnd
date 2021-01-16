@@ -8,6 +8,7 @@ const Resident = require("../models/resident.model");
 module.exports = {
   async create(req, res) {
     const { body, user } = req
+    console.log(req)
     try  {
       const condo = await Condo.findOne({_id: body.condo})
       if (!condo) {
@@ -31,23 +32,33 @@ module.exports = {
   async showResidentPayments (req, res) {
     const { user, params } = req
     try {
-      const { residentid } = params
+      const { residentid, usertype } = params
 
-      const admin = await Admin.findOne({_id: user})
-      const resident = await Resident.findOne({ _id: residentid })
-
-      const payments = await Payment.find({ resident: residentid }).populate('resident', 'condoId')
-
-      const condoid = resident.condoId.toString()
-
-      const allowed = admin.condoIds.find(condo => condo.toString() === condoid)
-
-      if (!allowed) {
+      if (usertype !== 'admin' && usertype !== 'resident') {
         throw new Error('Resource not available')
-      } 
+      } else if (usertype === 'admin') {
+        const admin = await Admin.findOne({_id: user})
+        const resident = await Resident.findOne({ _id: residentid })
 
-      res.status(201).json({ message: "Payments found", data: payments})
+        const payments = await Payment.find({ resident: residentid })
+
+        const condoid = resident.condoId.toString()
+
+        const allowed = admin.condoIds.find(condo => condo.toString() === condoid)
+        
+        if (!allowed) {
+          throw new Error('Resource not available')
+        } 
+        res.status(201).json({ message: "Payments found", data: payments})
+      } else if(usertype === 'resident') {
+        const payments = await Payment.find({ resident: user })
+        res.status(201).json({ message: "Payments found", data: payments})
+      }
+
+      
+
     } catch (err) {
+      console.log(err)
       res.status(400).json({ message: "Something went wrong!", data: err.message });      
       
     }
@@ -61,6 +72,7 @@ module.exports = {
 
       res.status(201).json({ message: "Payments found", data: payments})
     } catch (err) {
+      console.log(err)
       res.status(400).json({ message: "Something went wrong!", data: err.message });      
     }
   }

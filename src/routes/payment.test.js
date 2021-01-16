@@ -93,7 +93,7 @@ describe('Payment route', () => {
     }
     await Payment.create(newPayment)
 
-    const res = await req(app).get(`/payment/${resident._id}`)
+    const res = await req(app).get(`/payment/admin/${resident._id}`)
       .set('Authorization', `Bearer ${token}`)        
 
     expect(res.statusCode).toBe(201)
@@ -118,7 +118,7 @@ describe('Payment route', () => {
       { expiresIn: 60 * 60 * 24 }
     )
 
-    const res = await req(app).get(`/payment/${resident._id}`)
+    const res = await req(app).get(`/payment/admin/${resident._id}`)
       .set('Authorization', `Bearer ${anotherToken}`)        
 
     expect(res.statusCode).toBe(400)
