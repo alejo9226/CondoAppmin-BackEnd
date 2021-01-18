@@ -10,6 +10,7 @@ const Condo = require('../models/condo.model')
 const Unit = require('../models/unit.model')
 
 let token =  undefined
+let residentToken =  undefined
 let admin = undefined
 let condo = undefined
 let unit = undefined
@@ -43,7 +44,7 @@ describe('Payment route', () => {
       lastName: 'Perez',
       idNumber: '19191919',
       phone: '3598766777',
-      email: 'alejo9226@test.com',
+      email: 'danielgomez.s@hotmail.com',
       password: '12345',
       unitId: '',
       condoId: '',
@@ -59,6 +60,11 @@ describe('Payment route', () => {
     unit = await Unit.create({...newUnit, condoId: condo._id})
     const resPassword = await bcrypt.hash(newResident.password, 8)
     resident = await Resident.create({...newResident, password: resPassword, condoId: condo._id,unitId: unit._id})
+    residentToken = jwt.sign(
+      { id: resident._id },
+      process.env.SECRET,
+      { expiresIn: 60 * 60 * 24 }
+    )
   })
   afterAll(async () => await disconnect())
 
@@ -93,7 +99,7 @@ describe('Payment route', () => {
     }
     await Payment.create(newPayment)
 
-    const res = await req(app).get(`/payment/admin/${resident._id}`)
+    const res = await req(app).get(`/payment/many/admin/${resident._id}`)
       .set('Authorization', `Bearer ${token}`)        
 
     expect(res.statusCode).toBe(201)
@@ -118,7 +124,7 @@ describe('Payment route', () => {
       { expiresIn: 60 * 60 * 24 }
     )
 
-    const res = await req(app).get(`/payment/admin/${resident._id}`)
+    const res = await req(app).get(`/payment/many/admin/${resident._id}`)
       .set('Authorization', `Bearer ${anotherToken}`)        
 
     expect(res.statusCode).toBe(400)
@@ -156,5 +162,119 @@ describe('Payment route', () => {
     res.body.data.forEach(payment => {
       expect(payment.condo).toMatch(condo._id.toString())
     })
+  })
+  it('should retrieve a single payment when logged in admin is owner', async () => {
+    const newPayment = {
+      admin: admin._id,
+      resident: resident._id,
+      condo: condo._id,
+      unit: unit._id,
+      service: 'Administración',
+      value: 80000,
+      dueDate: '2021-01-20',
+    }
+    const createdPayment = await Payment.create({ ...newPayment })
+    console.log('creado', createdPayment)
+
+    const res = await req(app).get(`/payment/single/admin/${createdPayment._id}`)
+      .set('Authorization', `Bearer ${token}`)   
+
+    expect(res.statusCode).toBe(201)
+    expect(res.body.message).toMatch(/payment found/i)
+    expect(res.body.data.service).toMatch(newPayment.service)
+  })
+
+  it('should not retrieve a single payment when logged in admin isn\'t owner', async () => {
+    const newPayment = {
+      admin: admin._id,
+      resident: resident._id,
+      condo: condo._id,
+      unit: unit._id,
+      service: 'Administración',
+      value: 80000,
+      dueDate: '2021-01-20',
+    }
+    const createdPayment = await Payment.create({ ...newPayment })
+    const anotherUser = {
+      name: 'Name',
+      lastName: 'Lastname',
+      idNumber: '103875763457',
+      phone: '350738888000',
+      email: 'alejo5226@test.com',
+      password: '12345',
+    }
+    const encAnotherPassword = await bcrypt.hash(anotherUser.password, 8)
+    const anotherAdmin = await Admin.create({...anotherUser, password: encAnotherPassword})
+    const anotherToken = jwt.sign(
+      { id: anotherAdmin._id },
+      process.env.SECRET,
+      { expiresIn: 60 * 60 * 24 }
+    )
+    
+    const res = await req(app).get(`/payment/single/admin/${createdPayment._id}`)
+      .set('Authorization', `Bearer ${anotherToken}`)   
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toMatch(/something went wrong/i)
+    expect(res.body.data).toMatch(/resource not available/i)
+  })
+
+  it('should retrieve a single payment when logged in resident is owner', async () => {
+    const newPayment = {
+      admin: admin._id,
+      resident: resident._id,
+      condo: condo._id,
+      unit: unit._id,
+      service: 'Administración',
+      value: 80000,
+      dueDate: '2021-01-20',
+    }
+    const createdPayment = await Payment.create({ ...newPayment })
+    console.log('creado', createdPayment)
+
+    const res = await req(app).get(`/payment/single/resident/${createdPayment._id}`)
+      .set('Authorization', `Bearer ${residentToken}`)   
+
+    expect(res.statusCode).toBe(201)
+    expect(res.body.message).toMatch(/payment found/i)
+    expect(res.body.data.service).toMatch(newPayment.service)
+  })
+  it('should not retrieve a single payment when logged in resident isn\'t owner', async () => {
+    const anotherResident = {
+      name: 'Juan',
+      lastName: 'Torres',
+      idNumber: '1919194899',
+      phone: '3598766777',
+      email: 'juantorres@test.com',
+      password: '12345',
+      unitId: unit._id,
+      condoId: condo._id,
+    }
+    const encAnotherPassword = await bcrypt.hash(anotherResident.password, 8)
+    const otherResident = await Resident.create({...anotherResident, password: encAnotherPassword})
+    const anotherToken = jwt.sign(
+      { id: otherResident._id },
+      process.env.SECRET,
+      { expiresIn: 60 * 60 * 24 }
+    )
+    const newPayment = {
+      admin: admin._id,
+      resident: resident._id,
+      condo: condo._id,
+      unit: unit._id,
+      service: 'Administración',
+      value: 80000,
+      dueDate: '2021-01-20',
+    }
+    const createdPayment = await Payment.create({ ...newPayment })
+    console.log('creado', createdPayment)
+
+    const res = await req(app).get(`/payment/single/resident/${createdPayment._id}`)
+      .set('Authorization', `Bearer ${anotherToken}`)   
+
+    console.log('respuesta', res.body)
+    expect(res.statusCode).toBe(400)
+    expect(res.body.message).toMatch(/something went wrong/i)
+    expect(res.body.data).toMatch(/resource not available/i)
   })
 })

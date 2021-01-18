@@ -8,7 +8,6 @@ const Resident = require("../models/resident.model");
 module.exports = {
   async create(req, res) {
     const { body, user } = req
-    console.log(req)
     try  {
       const condo = await Condo.findOne({_id: body.condo})
       if (!condo) {
@@ -33,7 +32,6 @@ module.exports = {
     const { user, params } = req
     try {
       const { residentid, usertype } = params
-
       if (usertype !== 'admin' && usertype !== 'resident') {
         throw new Error('Resource not available')
       } else if (usertype === 'admin') {
@@ -54,9 +52,6 @@ module.exports = {
         const payments = await Payment.find({ resident: user })
         res.status(201).json({ message: "Payments found", data: payments})
       }
-
-      
-
     } catch (err) {
       console.log(err)
       res.status(400).json({ message: "Something went wrong!", data: err.message });      
@@ -68,12 +63,33 @@ module.exports = {
     try {
       const { condoid } = params
 
-      const payments = await Payment.find({ condo: condoid, admin: user })
+      const payments = await Payment.find({ condo: condoid, admin: user }).populate('unit', 'name')
 
       res.status(201).json({ message: "Payments found", data: payments})
     } catch (err) {
       console.log(err)
       res.status(400).json({ message: "Something went wrong!", data: err.message });      
+    }
+  },
+  async showSinglePayment (req, res) {
+    console.log('entro a showsinglepaymeent')
+    const { user, params } = req
+    const { usertype, paymentid } = params
+    try {
+      if (usertype !== 'admin' && usertype !== 'resident') {
+        throw new Error('Resource not available')
+      } else if (usertype === 'admin') {
+        const payment = await Payment.findOne({ _id: paymentid, admin: user }).populate('unit', 'name').populate('resident', 'name lastName')
+        console.log('pament', payment)
+        if (!payment) throw new Error('Resource not available')
+        res.status(201).json({ message: 'Payment found', data: payment})
+      } else if (usertype === 'resident') {
+        const payment = await Payment.findOne({ _id: paymentid, resident: user }).populate('unit', 'name')
+        if (!payment) throw new Error('Resource not available')
+        res.status(201).json({ message: 'Payment found', data: payment})
+      }
+    } catch (err) {
+      res.status(400).json({ message: 'Something went wrong!', data: err.message})
     }
   }
 }
