@@ -91,5 +91,18 @@ module.exports = {
     } catch (err) {
       res.status(400).json({ message: 'Something went wrong!', data: err.message})
     }
+  },
+  async isPayed (req, res) {
+    try {
+      console.log('entró a ispayed')
+      const { params, user } = req
+      const { paymentid } = params
+      const updatedPayment = await Payment.findOneAndUpdate({ _id: paymentid, resident: user}, { isPayed: true }, { new: true })
+      console.log('pago actualizado', updatedPayment)
+      if (!updatedPayment) throw new Error('Resource not available')
+      res.status(201).json({ message: 'Payment updated', data: updatedPayment})
+    } catch (err) {
+      res.status(400).json({ message: 'Payment not updated', data: err.message})
+    }
   }
 }
