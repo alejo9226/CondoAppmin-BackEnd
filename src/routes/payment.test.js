@@ -25,7 +25,7 @@ describe('Payment route', () => {
       lastName: 'Alfaro',
       idNumber: '1038757637',
       phone: '3507388888',
-      email: 'alejo0226@gmail.com',
+      email: 'alejo9226@test.com',
       password: '12345',
     }
     const newCondo = {
@@ -44,7 +44,7 @@ describe('Payment route', () => {
       lastName: 'Perez',
       idNumber: '19191919',
       phone: '3598766777',
-      email: 'danielgomez.s@test.com',
+      email: 'alejandro.alfaro9226@test.com',
       password: '12345',
       unitId: '',
       condoId: '',
@@ -75,6 +75,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
       value: 80000,
       dueDate: '2021-01-20',
     }
@@ -94,6 +95,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
       value: 80000,
       dueDate: '2021-01-20',
     }
@@ -138,6 +140,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
       value: 80000,
       dueDate: '2021-01-20',
     }
@@ -147,6 +150,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Cancha de Tennis',
+      description: 'Pago de uso de cancha de tennis por 1 hora',
       value: 30000,
       dueDate: '2021-02-20',
     }
@@ -170,6 +174,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
       value: 80000,
       dueDate: '2021-01-20',
     }
@@ -190,6 +195,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
       value: 80000,
       dueDate: '2021-01-20',
     }
@@ -225,6 +231,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
       value: 80000,
       dueDate: '2021-01-20',
     }
@@ -261,6 +268,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
       value: 80000,
       dueDate: '2021-01-20',
     }
@@ -281,6 +289,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
       value: 80000,
       dueDate: '2021-01-20',
     }
@@ -300,6 +309,7 @@ describe('Payment route', () => {
       condo: condo._id,
       unit: unit._id,
       service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
       value: 80000,
       dueDate: '2021-01-20',
     }
@@ -310,5 +320,30 @@ describe('Payment route', () => {
     expect(res.statusCode).toBe(201)
     expect(res.body.message).toMatch(/payment updated/i)
     expect(res.body.data.isPayed).toBe(true)
+  })
+
+  fit('should send an email reminder to a resident', async () => {
+    const newPayment = {
+      admin: admin._id,
+      resident: resident._id,
+      condo: condo._id,
+      unit: unit._id,
+      service: 'Administración',
+      description: 'Pago de administración de Diciembre de 2020',
+      value: 80000,
+      dueDate: '2021-01-20',
+    }
+    const createdPayment = await Payment.create({ ...newPayment })
+    const body = {
+      message: `El presente es para recordarle que su pago de ${createdPayment.service} vence en ${Date.now() - createdPayment.dueDate} días`
+    }
+    
+    const res = await req(app).post(`/payment/reminder/${createdPayment._id}`)
+      .send(body)
+      .set('Authorization', `Bearer ${token}`) 
+
+    expect(res.statusCode).toBe(201)
+    expect(res.body.message).toMatch(/email sent/i)
+
   })
 })

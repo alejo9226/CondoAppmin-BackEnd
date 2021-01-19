@@ -25,6 +25,10 @@ const paymentSchema = new Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true
+  },
   value: {
     type: Number,
     required: true,
