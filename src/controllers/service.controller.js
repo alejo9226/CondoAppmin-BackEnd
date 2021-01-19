@@ -8,9 +8,7 @@ module.exports = {
       const service = await Service.create({...body})
       res.status(201).json({message: 'Service created', data: service})
     } catch (err) {
-      console.log(err)
       res.status(400).json({message: 'Service not created', data: err.message})
-      
     }
   }
 }

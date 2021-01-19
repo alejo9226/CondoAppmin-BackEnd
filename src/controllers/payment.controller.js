@@ -53,7 +53,6 @@ module.exports = {
         res.status(201).json({ message: "Payments found", data: payments})
       }
     } catch (err) {
-      console.log(err)
       res.status(400).json({ message: "Something went wrong!", data: err.message });      
       
     }
@@ -63,16 +62,14 @@ module.exports = {
     try {
       const { condoid } = params
 
-      const payments = await Payment.find({ condo: condoid, admin: user }).populate('unit', 'name')
+      const payments = await Payment.find({ condo: condoid, admin: user }).populate('unit', 'name').populate('resident', 'name lastName')
 
       res.status(201).json({ message: "Payments found", data: payments})
     } catch (err) {
-      console.log(err)
       res.status(400).json({ message: "Something went wrong!", data: err.message });      
     }
   },
   async showSinglePayment (req, res) {
-    console.log('entro a showsinglepaymeent')
     const { user, params } = req
     const { usertype, paymentid } = params
     try {
@@ -80,7 +77,6 @@ module.exports = {
         throw new Error('Resource not available')
       } else if (usertype === 'admin') {
         const payment = await Payment.findOne({ _id: paymentid, admin: user }).populate('unit', 'name').populate('resident', 'name lastName')
-        console.log('pament', payment)
         if (!payment) throw new Error('Resource not available')
         res.status(201).json({ message: 'Payment found', data: payment})
       } else if (usertype === 'resident') {
@@ -94,12 +90,13 @@ module.exports = {
   },
   async isPayed (req, res) {
     try {
-      console.log('entró a ispayed')
       const { params, user } = req
       const { paymentid } = params
+
       const updatedPayment = await Payment.findOneAndUpdate({ _id: paymentid, resident: user}, { isPayed: true }, { new: true })
-      console.log('pago actualizado', updatedPayment)
+
       if (!updatedPayment) throw new Error('Resource not available')
+      
       res.status(201).json({ message: 'Payment updated', data: updatedPayment})
     } catch (err) {
       res.status(400).json({ message: 'Payment not updated', data: err.message})

@@ -44,7 +44,7 @@ describe('Payment route', () => {
       lastName: 'Perez',
       idNumber: '19191919',
       phone: '3598766777',
-      email: 'danielgomez.s@hotmail.com',
+      email: 'danielgomez.s@test.com',
       password: '12345',
       unitId: '',
       condoId: '',
@@ -174,7 +174,6 @@ describe('Payment route', () => {
       dueDate: '2021-01-20',
     }
     const createdPayment = await Payment.create({ ...newPayment })
-    console.log('creado', createdPayment)
 
     const res = await req(app).get(`/payment/single/admin/${createdPayment._id}`)
       .set('Authorization', `Bearer ${token}`)   
@@ -230,7 +229,6 @@ describe('Payment route', () => {
       dueDate: '2021-01-20',
     }
     const createdPayment = await Payment.create({ ...newPayment })
-    console.log('creado', createdPayment)
 
     const res = await req(app).get(`/payment/single/resident/${createdPayment._id}`)
       .set('Authorization', `Bearer ${residentToken}`)   
@@ -267,18 +265,16 @@ describe('Payment route', () => {
       dueDate: '2021-01-20',
     }
     const createdPayment = await Payment.create({ ...newPayment })
-    console.log('creado', createdPayment)
 
     const res = await req(app).get(`/payment/single/resident/${createdPayment._id}`)
       .set('Authorization', `Bearer ${anotherToken}`)   
 
-    //console.log('respuesta', res.body)
     expect(res.statusCode).toBe(400)
     expect(res.body.message).toMatch(/something went wrong/i)
     expect(res.body.data).toMatch(/resource not available/i)
   })
 
-  it('should not update a paymemt to true when user isn\'t owner', async () => {
+  it('should not update a paymemt to true when resident isn\'t owner', async () => {
     const newPayment = {
       admin: admin._id,
       resident: resident._id,
@@ -297,7 +293,7 @@ describe('Payment route', () => {
     expect(res.body.data).toMatch(/resource not available/i)
   })
 
-  it('should update a paymemt to true when user is owner', async () => {
+  it('should update a payment to true when resident is owner', async () => {
     const newPayment = {
       admin: admin._id,
       resident: resident._id,
@@ -311,8 +307,6 @@ describe('Payment route', () => {
     const res = await req(app).put(`/payment/${createdPayment._id}`)
       .set('Authorization', `Bearer ${residentToken}`)   
     
-    const payments = await Payment.find()
-
     expect(res.statusCode).toBe(201)
     expect(res.body.message).toMatch(/payment updated/i)
     expect(res.body.data.isPayed).toBe(true)

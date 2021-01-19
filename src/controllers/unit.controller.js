@@ -3,7 +3,6 @@ const Unit = require('../models/unit.model')
 module.exports = {
   async create(req, res) {
     const data = req.body
-    console.log('Create unit data =>   ', data)
     try {
       const unit = await Unit.create(data)
       res.status(201).json({ message: 'Unit created', data: unit })
