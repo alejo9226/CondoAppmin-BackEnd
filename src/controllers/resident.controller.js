@@ -36,6 +36,7 @@ module.exports = {
       res.status(200).json({
         message: 'resident found',
         name: resident.name,
+        lastName: resident.lastName,
         id: resident._id,
         email: resident.email,
         condoId: resident.condoId._id,
