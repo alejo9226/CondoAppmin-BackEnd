@@ -1,6 +1,6 @@
-const router = require("express").Router();
-const condoController = require("../controllers/condo.controller");
-const { auth } = require("../utils/auth");
+const router = require("express").Router()
+const condoController = require("../controllers/condo.controller")
+const { auth } = require("../utils/auth")
 
 router.use(auth)
 router.route("/").post(condoController.create)

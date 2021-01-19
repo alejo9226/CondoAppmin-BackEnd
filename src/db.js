@@ -10,16 +10,14 @@ async function connect() {
     useUnifiedTopology: true,
   }
   connection = mongoose.connection
-  connection.once('open', () =>
-    console.log('Connection established successfully')
-  )
-  connection.on('disconnected', () => console.log('Successfully disconnected'))
-  connection.on('error', (err) => console.log('Something went wrong!', err))
+  connection.once('open', () => console.log('Connection established successfully'));
+  connection.on('disconnected', () => console.log('Successfully disconnected'));
+  connection.on('error', err => console.log('Something went wrong!', err));
 
   await mongoose.connect(process.env.DB_CONNECTION_STRING, options)
 }
 async function disconnect() {
-  if (!connection) return
+  if (!connection) return 
 
   await mongoose.disconnect()
 }

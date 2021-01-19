@@ -1,6 +1,7 @@
 const Admin = require('../models/admin.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { transporter, adminWelcome } = require('../utils/mailer')
 
 module.exports = {
   async create(req, res) {
@@ -11,6 +12,8 @@ module.exports = {
       const token = jwt.sign({ id: admin._id }, process.env.SECRET, {
         expiresIn: 60 * 60 * 24,
       })
+
+      await transporter.sendMail(adminWelcome(admin.name, admin.email, password))
 
       res.status(201).json({ token, message: 'Cuenta creada exitosamente' })
     } catch (err) {
