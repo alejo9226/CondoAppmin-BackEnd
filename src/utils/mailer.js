@@ -72,7 +72,6 @@ exports.adminWelcome = (userName, userEmail, userPassword) => {
     </div>`,
   }
 }
-
 exports.residentPayment = (userName, userEmail, condoName, service, period, dueDate) => {
   return {
     from: `"${condoName}" <${process.env.USER_EMAIL}>`,
@@ -89,6 +88,29 @@ exports.residentPayment = (userName, userEmail, condoName, service, period, dueD
         plazo para pago es: ${dueDate} 
         </p>
         <p>Para hacer el pago haz click <a href="#">aquí</a></p>
+        <p>¡Juntos contruiremos una gran convivencia!</p>
+        <p></p>
+        <p></p>
+        <p>ADMINISTRACIÓN</p>
+    </div>`,
+  }
+}
+exports.residentPaymentReminder = (condoName, resident, payment, message) => {
+  return {
+    from: `"${condoName}" <${process.env.USER_EMAIL}>`,
+    to: resident.email,
+    subject: `Recordatorio de pago de ${payment.service}`,
+    html: `
+    <div>
+        <h3 style='color:red;'>Hola ${resident.name}</h3>
+        <p>De acuerdo a lo que se ha definido en el conjunto el ultimo
+        plazo para tu pago es: ${payment.dueDate} 
+        <p>${message}.
+        No olvides que el pago oportuno de ${payment.service} se puede hacer hasta ${payment.dueDate} 
+        Si deseas puedes hacer el pago a través de la plataforma o también a través de este 
+        <a href="#">link</a>
+        </p>
+    
         <p>¡Juntos contruiremos una gran convivencia!</p>
         <p></p>
         <p></p>

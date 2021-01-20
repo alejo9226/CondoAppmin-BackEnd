@@ -1,7 +1,7 @@
 const Payment = require("../models/payment.model");
 const Admin = require('../models/admin.model');
 const Condo = require('../models/condo.model');
-const { transporter, residentPayment } = require("../utils/mailer");
+const { transporter, residentPayment, residentPaymentReminder } = require("../utils/mailer");
 const Resident = require("../models/resident.model");
 
 
@@ -100,6 +100,36 @@ module.exports = {
       res.status(201).json({ message: 'Payment updated', data: updatedPayment})
     } catch (err) {
       res.status(400).json({ message: 'Payment not updated', data: err.message})
+    }
+  },
+  async sendEmailReminder (req, res) {
+    try {
+      const { params, user, body } = req
+      const { paymentid } = params
+      const { message } = body
+      console.log('body', message)
+
+      const admin = await Admin.findOne({_id: user})
+      const payment = await Payment.findOne({ _id: paymentid })
+      const resident = await Resident.findOne({ _id: payment.resident }).populate('condoId', 'name')
+      const condoid = resident.condoId._id.toString()
+      const condoName = resident.condoId.name
+      
+      const allowed = admin.condoIds.find(condo => condo.toString() === condoid)
+      if (!allowed) {
+        throw new Error('Resource not available')
+      }
+      
+      const sentEmail = await transporter.sendMail(residentPaymentReminder(condoName, resident, payment, message))
+
+      if (sentEmail.response.search(/ok/i) === -1) {
+        throw new Error('Resource not available')
+      }
+      
+      res.status(201).json({ message: 'Email sent' })
+    } catch (err) {
+      res.status(400).json({ message: 'Email not sent', data: err.message })
+
     }
   }
 }

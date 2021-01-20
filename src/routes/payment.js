@@ -4,6 +4,7 @@ const { auth } = require("../utils/auth")
 
 router.use(auth)
 router.route("/").post(paymentController.create)
+router.route("/reminder/:paymentid").post(paymentController.sendEmailReminder)
 
 router.route("/condo/:condoid").get(paymentController.showCondoPayments)
 router.route("/single/:usertype/:paymentid").get(paymentController.showSinglePayment)
