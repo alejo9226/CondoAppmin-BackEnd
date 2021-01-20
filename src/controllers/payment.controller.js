@@ -25,6 +25,7 @@ module.exports = {
 
       res.status(201).json({ message: "Payment created", data: payment });
     } catch (err) {
+      console.log('err.message', err.message)
       res.status(400).json({ message: "Something went wrong!", data: err.message });      
     }
   },
@@ -107,7 +108,6 @@ module.exports = {
       const { params, user, body } = req
       const { paymentid } = params
       const { message } = body
-      console.log('body', message)
 
       const admin = await Admin.findOne({_id: user})
       const payment = await Payment.findOne({ _id: paymentid })
