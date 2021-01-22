@@ -25,7 +25,6 @@ module.exports = {
 
       res.status(201).json({ message: "Payment created", data: payment });
     } catch (err) {
-      console.log('err.message', err.message)
       res.status(400).json({ message: "Something went wrong!", data: err.message });      
     }
   },
