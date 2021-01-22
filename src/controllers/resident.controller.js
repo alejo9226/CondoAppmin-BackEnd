@@ -3,12 +3,16 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { transporter, residentWelcome } = require('../utils/mailer')
 const Condo = require('../models/condo.model')
+const Unit = require('../models/unit.model')
 require('dotenv').config()
 
 module.exports = {
   async create(req, res) {
     try {
-      const { password, condoId } = req.body
+      const { password, condoId, unitId } = req.body
+
+      const unit = await Unit.findOne({ _id: unitId })
+      if (unit.resident) throw new Error('La unidad ya tiene un residente')
 
       const encPassword = await bcrypt.hash(password, 8)
       const resident = await Resident.create({
@@ -21,9 +25,7 @@ module.exports = {
       await transporter.sendMail(residentWelcome(condo.name, resident.name, resident.email, password))
       res.status(201).json({ message: 'Resident Created!', data: resident })
     } catch (err) {
-      res.status(400).json({
-        message: err.message,
-      })
+      res.status(400).json({ message: 'Resident not created', data: err.message })
     }
   },
   async authenticate(req, res) {

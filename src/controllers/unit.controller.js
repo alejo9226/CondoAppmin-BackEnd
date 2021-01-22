@@ -4,10 +4,13 @@ module.exports = {
   async create(req, res) {
     const data = req.body
     try {
+      const existingUnit = await Unit.findOne({ name: data.name, condoId: data.condoId })
+      if (existingUnit) throw new Error('La unidad ya existe')
+
       const unit = await Unit.create(data)
       res.status(201).json({ message: 'Unit created', data: unit })
     } catch (err) {
-      res.status(400).json({ message: 'Something was wrong!', data: err })
+      res.status(400).json({ message: 'Something went wrong!', data: err.message })
     }
   },
 
@@ -16,7 +19,7 @@ module.exports = {
       const unit = await Unit.find()
       res.status(200).json({ message: 'Units found', data: unit })
     } catch (err) {
-      res.status(400).json({ message: 'Units not found', data: err })
+      res.status(400).json({ message: 'Units not found', data: err.message })
     }
   },
   async show(req, res) {
@@ -27,7 +30,7 @@ module.exports = {
       )
       res.status(200).json({ message: 'Units found', data: units })
     } catch (err) {
-      res.status(400).json({ message: "Units couldn't be found", data: err })
+      res.status(400).json({ message: "Units couldn't be found", data: err.message })
     }
   },
   async update(req, res) {
@@ -47,7 +50,7 @@ module.exports = {
       const deletedUnit = await Unit.findByIdAndDelete({ _id: unitid })
       res.status(200).json({ message: 'Unit deleted', data: deletedUnit })
     } catch (err) {
-      res.status(400).json({ message: 'Unit could not be deleted', data: err })
+      res.status(400).json({ message: 'Unit could not be deleted', data: err.message })
     }
   },
   async deleteAllFromCondo(req, res) {
@@ -56,7 +59,7 @@ module.exports = {
       const deletedUnits = await Unit.deleteMany({ condoId: condoid })
       res.status(200).json({ message: 'Units deleted', data: deletedUnits })
     } catch (err) {
-      res.status(400).json({ message: 'Units could not be deleted', data: err })
+      res.status(400).json({ message: 'Units could not be deleted', data: err.message })
     }
   },
   async deleteAll(req, res) {
@@ -64,7 +67,7 @@ module.exports = {
       const deletedUnits = await Unit.deleteMany({})
       res.status(200).json({ message: 'Units removed', data: deletedUnits })
     } catch (err) {
-      res.status(400).json({ message: 'Units could not be removed', data: err })
+      res.status(400).json({ message: 'Units could not be removed', data: err.message })
     }
   },
 }
