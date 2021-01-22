@@ -68,6 +68,12 @@ describe('Resident route', () => {
   afterAll(async () => await disconnect())
 
   it('should create a resident', async () => {
+    const otherUnit = {
+      name: 'Apartamento 202',
+      condoId: '',
+    }
+    const anotherUnit = await Unit.create({...otherUnit, condoId: condo._id})
+
     const anotherResident = {
       name: 'Juan',
       lastName: 'Perez',
@@ -75,7 +81,7 @@ describe('Resident route', () => {
       phone: '3598766777',
       email: 'juanpi@test.com',
       password: '12345',
-      unitId: unit._id,
+      unitId: anotherUnit._id,
       condoId: condo._id,
     }
     const res = await req(app).post('/resident')
@@ -87,7 +93,12 @@ describe('Resident route', () => {
     expect(res.body.data.name).toMatch(anotherResident.name)
     expect(res.body.data.email).toMatch(anotherResident.email)
   })
-  it('should not create resident when email already exist', async () => {
+  it('should not create resident when email already exists', async () => {
+    const otherUnit = {
+      name: 'Apartamento 202',
+      condoId: '',
+    }
+    const anotherUnit = await Unit.create({...otherUnit, condoId: condo._id})
     const anotherResident = {
       name: 'Juan',
       lastName: 'Perez',
@@ -95,7 +106,7 @@ describe('Resident route', () => {
       phone: '3598766777',
       email: newResident.email,
       password: '12345',
-      unitId: unit._id,
+      unitId: anotherUnit._id,
       condoId: condo._id,
     }
     const res = await req(app).post('/resident')
@@ -103,9 +114,32 @@ describe('Resident route', () => {
       .set('Authorization', `Bearer ${token}`)
       
     expect(res.statusCode).toBe(400)
-    expect(res.body.message).toMatch(/correo ya está en uso/i)
+    expect(res.body.data).toMatch(/correo ya está en uso/i)
   })
   it('should not create resident when id already exist', async () => {
+    const otherUnit = {
+      name: 'Apartamento 202',
+      condoId: '',
+    }
+    const anotherUnit = await Unit.create({...otherUnit, condoId: condo._id})
+    const anotherResident = {
+      name: 'Juan',
+      lastName: 'Perez',
+      idNumber: newResident.idNumber,
+      phone: '3598766777',
+      email: 'another@test.com',
+      password: '12345',
+      unitId: anotherUnit._id,
+      condoId: condo._id,
+    }
+    const res = await req(app).post('/resident')
+      .send(anotherResident)
+      .set('Authorization', `Bearer ${token}`)
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body.data).toMatch(/cédula ya esta registrada/i)
+  })
+  it('should not create resident when chosen unit is already taken', async () => {
     const anotherResident = {
       name: 'Juan',
       lastName: 'Perez',
@@ -121,6 +155,6 @@ describe('Resident route', () => {
       .set('Authorization', `Bearer ${token}`)
 
     expect(res.statusCode).toBe(400)
-    expect(res.body.message).toMatch(/cédula ya esta registrada/i)
+    expect(res.body.data).toMatch(/la unidad ya tiene un residente/i)
   })
 })

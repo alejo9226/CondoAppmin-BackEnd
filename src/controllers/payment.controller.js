@@ -107,7 +107,6 @@ module.exports = {
       const { params, user, body } = req
       const { paymentid } = params
       const { message } = body
-      console.log('body', message)
 
       const admin = await Admin.findOne({_id: user})
       const payment = await Payment.findOne({ _id: paymentid })
